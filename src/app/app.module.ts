@@ -3,9 +3,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import 'hammerjs';
+
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-import { MaterialModule} from "@angular/material";
+import {MaterialModule, MdButtonModule, MdCheckboxModule, MdSliderModule} from "@angular/material";
 
 import {nvD3} from 'ng2-nvd3';
 
@@ -24,6 +26,7 @@ import { ModelDetailPlainComponent } from './model-detail-plain/model-detail-pla
 import { KeysPipe } from './keys.pipe';
 import {Routing} from "./app.routes";
 import {ChartService} from "./services/chart.service";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -42,7 +45,10 @@ import {ChartService} from "./services/chart.service";
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot(),
+    BrowserAnimationsModule,
+    MdSliderModule,
+    MdButtonModule,
+    MdCheckboxModule,
     Routing
   ],
   providers: [

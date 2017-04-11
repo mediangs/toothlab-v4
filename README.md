@@ -26,3 +26,17 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+package.json
+  x3dom 
+angular-cli.json
+  x3dom ( script, css)
+
+npm install --save d3@^3 nvd3
+npm install --save ng2-nvd3
+npm install --save @angular/animations
+npm install --save @angular/material
+npm install --save hammerjs
+
+
