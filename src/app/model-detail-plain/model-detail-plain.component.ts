@@ -78,20 +78,24 @@ export class ModelDetailPlainComponent implements OnInit {
         let FileMovement = namedlist(['vector', 'angle']);
 
         data.sections.forEach(d=>{
-          d.pre_mindist = DentinThickness(d.pre_mindist);
-          d.pst_mindist = DentinThickness(d.pst_mindist);
-          d.pre_mindist_line = [d.pre_mindist.p_body, d.pre_mindist.p_canal];
-          d.pst_mindist_line = [d.pst_mindist.p_body, d.pst_mindist.p_canal];
+          d.mindist_ref = DentinThickness(d.mindist_ref);
+          d.mindist_ref_line = [d.mindist_ref.p_body, d.mindist_ref.p_canal];
 
-          d.cnl_pre_narrow = CanalDimension(d.cnl_pre_narrow);
-          d.cnl_pst_narrow = CanalDimension(d.cnl_pst_narrow);
-          d.cnl_pre_wide = CanalDimension(d.cnl_pre_wide);
-          d.cnl_pst_wide = CanalDimension(d.cnl_pst_wide);
+          d.mindists_cmp_line = {};
+          Object.keys(d.mindists_cmp).forEach(k => {
+            d.mindists_cmp[k] = DentinThickness(d.mindists_cmp[k]);
+            d.mindists_cmp_line[k] = [d.mindists_cmp[k].p_body, d.mindists_cmp[k].p_canal];
+          });
 
-          d.cnl_transportation = FileMovement(d.cnl_transportation);
-          d.cnl_straightened = FileMovement(d.cnl_straightened);
+          d.cnl_ref_narrow = CanalDimension(d.cnl_ref_narrow);
+          d.cnl_ref_wide = CanalDimension(d.cnl_ref_wide);
+
+          Object.keys(d.cnls_cmp_narrow).forEach(k=>{d.cnls_cmp_narrow[k] = CanalDimension(d.cnls_cmp_narrow[k])});
+          Object.keys(d.cnls_cmp_wide).forEach(k=>{d.cnls_cmp_wide[k] = CanalDimension(d.cnls_cmp_wide[k])});
+
           d.cnl_straightening = FileMovement(d.cnl_straightening);
-
+          Object.keys(d.cnls_transportation).forEach(k=>{d.cnls_transportation[k]=FileMovement(d.cnls_transportation[k])});
+          Object.keys(d.cnls_straightened).forEach(k=>{d.cnls_straightened[k]=FileMovement(d.cnls_straightened[k])});
         });
 
         this.sectionData = data;
@@ -110,13 +114,26 @@ export class ModelDetailPlainComponent implements OnInit {
 
     this.chartData = [
       {
-        values: data.sections.map(d=> [d.section, d.pre_mindist.thickness]),   //values - represents the array of {x,y} data points
+        values: data.sections.map(d=> [d.section, d.mindist_ref.thickness]),   //values - represents the array of {x,y} data points
         key: 'Thinnest dentin(pre)', //key  - the name of the series.
         color: '#ff7f0e'  //color - optional: choose your own line color.
       },
+    ];
+
+    Object.keys(data.sections[0].mindists_cmp).forEach(k=>{
+      this.chartData.push({
+        values: data.sections.map(d=>[d.section, d.mindists_cmp[k].thickness] || 0),
+        key : k
+      });
+    });
+    console.log(this.chartData);
+
+
+
+    /*
 
       {
-        values: data.sections.map(d=> [d.section, d.pst_mindist.thickness]),
+        values: data.sections.map(d=> [d.section, d.mindists_cmp[k].thickness]),
         key: 'Thinnest dentin(post)',
         color: '#2ca02c'
       },
@@ -136,6 +153,7 @@ export class ModelDetailPlainComponent implements OnInit {
         key: 'Canal area, Post (mm2)',
       }
     ];
+    */
   }
 
   setChartOptions(){
@@ -238,11 +256,8 @@ export class ModelDetailPlainComponent implements OnInit {
 
   setIndexedLineSet(sectionLevel) {
     var keys_outline = ['bdy_major_outline',
-                'cnl_pre_major_outline',
-                'cnl_pst_major_outline',
-                'cnl_pre_opp_major_outline',
-                'pre_mindist_line',
-                'pst_mindist_line'];
+                'cnl_ref_major_outline',
+                'mindist_ref_line'];
 
     // find nearest section level
     var section = this.sectionData.sections

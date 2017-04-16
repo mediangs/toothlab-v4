@@ -7,12 +7,18 @@
 
 export interface SectionModelSchema {
   model: {
+    name: string,
+    evaluating_canal: number,
     crv_name: string,
-    pre_crv_length: number,
-    pts_of_pre_crv: Array<Array<number>>,
-    pts_of_pst_crv: Array<Array<number>>,
-    pts_of_opp_pre_crv: Array<Array<number>>,
-    median_major_axis_vector: Array<number>
+    crv_ref_length: number,
+    length_buccal: number,
+    length_lingual: number,
+    furcation_pos_buccal: number,
+    furcation_pos_lingual: number,
+    median_major_axis_vector: Array<number>,
+    pts_of_crv_ref: Array<Array<number>>,
+    pts_of_crvs_cmp: any,
+    pts_of_crv_opp_ref: Array<Array<number>>
   },
   sections: Array<SectionSchema>
 }
@@ -25,57 +31,102 @@ export interface DentinThicknessSchema {
 }
 
 export interface SectionSchema{
+
   section : number,
 
   bdy_major_outline : Array<Array<number>>,
-  cnl_pre_major_outline : Array<Array<number>>,
-  cnl_pst_major_outline : Array<Array<number>>,
-  cnl_pst_major_p2_outline : Array<Array<number>>,
+  cnl_ref_major_outline : Array<Array<number>>,
+  cnls_cmp_major_outline : any,
+  cnls_cmp_major_p2_outline : any,
+  cnl_opp_ref_major_outline : Array<Array<number>>,
+  cnls_opp_cmp_major_outline : any,
 
-  cnl_pre_opp_major_outline : Array<Array<number>>,
-  cnl_pst_opp_major_outline : Array<Array<number>>,
+  // DentinThickness(p_body, p_canal, thickness, angle)
+  mindist_ref : any,
+  mindists_cmp : any,
 
-  pre_mindist : any, // load후 object 로 변환,
-  pst_mindist : any, //load후 object 로 변환,
+  lateral_ref : any,
+  laterals_cmp : any,
 
-  pre_mindist_line : Array<Array<number>>,  //Data load후 추가함 [pre_mindist.p_body, pre_mindist.p_canal]
-  pst_mindist_line : Array<Array<number>>,  //
+  counter_lateral_ref : any,
+  counter_laterals_cmp : any,
 
-  cnl_transportation : any, //load후 object 로 변환,
-  cnl_straightened : any,
+  mesial_ref : any,
+  mesials_cmp : any,
+
+  distal_ref : any,
+  distals_cmp : any,
+
+  // === Data load 후 추가항목 [pre_mindist.p_body, pre_mindist.p_canal]
+  mindist_ref_line : Array<Array<number>>,
+  mindists_cmp_line : object,
+
+  lateral_ref_line : Array<Array<number>>,
+  laterals_cmp_line : object,
+
+  counter_lateral_ref_line : Array<Array<number>>,
+  counter_laterals_cmp_line : object,
+
+  mesial_ref_line : Array<Array<number>>,
+  mesials_cmp_line : object,
+
+  distal_ref_line : Array<Array<number>>,
+  distals_cmp_line : object,
+  // === end of Data load 후 추가항목
+
+
+  // FileMovement(vector, angle, distance)
   cnl_straightening : any,
+  cnls_straightened : any,
+  cnls_transportation : any,
 
-  cnl_pre_narrow : any,
-  cnl_pst_narrow: any,
+  // CanalDimension(p1, p2, width)
+  cnl_ref_narrow : any,
+  cnl_ref_wide : any,
 
-  cnl_pre_wide : any,
-  cnl_pst_wide : any,
+  cnls_cmp_narrow : any,
+  cnls_cmp_wide : any,
 
-  cwt_ratio : number,
-  area_cnl_pst : number,
-  area_cnl_pre : number,
+  area_cnl_ref : any,
+  area_cnls_cmp : any,
 
-  cnl_pre_major_outline_exist : boolean,
-  tangential_CH_pt_at_pst_crv : Array<number>,
-  pt_at_pst_crv : Array<number>,
-  CH_pt_at_pst_crv : Array<number>,
-  major_axis_vector : Array<number>,
-  median_major_axis_used : boolean,
-  pt_at_opp_pre_crv : Array<number>,
-  t_vector_at_pre_crv : Array<number>,
-  tangential_CH_pt_at_CH_axis : Array<number>,
-  bdy_major_outline_exist : boolean,
-  pt_at_pre_crv : Array<number>,
-  pt_cnl_pre_cwt : Array<number>,
-  major_axis_t_vector : Array<number>,
-  cnl_pst_major_outline_exist: boolean,
-  CH_pt_at_CH_axis : Array<number>,
+  curvature_ref : any,
+  curvatures_cmp : any,
+
+  torsion_ref : any,
+  torsions_cmp : any,
+
+  pt_at_crv_ref : any,
+  pt_at_crvs_cmp : any,
+  pt_at_crv_opp_ref : any,
+
+  CH_pt_at_crvs_cmp : any,
+  CH_pt_at_CH_axis : any,
+  tangential_CH_pt_at_crvs_cmp : any,
+  tangential_CH_pt_at_CH_axis : any,
+
+  t_vector_at_crv_ref : any,
+  major_axis_vector : any,
+  major_axis_t_vector : any,
+  median_major_axis_used : any,
+
+  bdy_major_outline_exist : any,
+  cnl_ref_major_outline_exist : any,
+  cnls_cmp_major_outline_exist : any,
+
+  pt_cnl_ref_cwt : any,
+  cwt_ratios : any,
+
+  CH_ref : any,
+  CHs_cmp : any
 }
 
 
 export interface  ViewSectionSchema{
   bdy_major_outline? : any,
-  cnl_pre_major_outline? : any,
-  cnl_pst_major_outline? : any,
-  cnl_pre_opp_major_outline? : any,
+  cnl_ref_major_outline? : any,
+  cnls_cmp_major_outline? : any,
+  cnls_cmp_major_p2_outline? : any,
+  cnl_opp_ref_major_outline? : any,
+  cnls_opp_cmp_major_outline? : any,
 }
