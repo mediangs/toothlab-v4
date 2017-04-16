@@ -30,10 +30,9 @@
           color="primary"
           [checked]="x3d.transparency < 1"
           (change)="toggleModel(x3d, value.checked)">
-          <md-icon class="md-24"
-                   style="vertical-align: middle;"
-                   [style.color]="x3d.color">label
-          </md-icon>
+          <i class="material-icons"
+             style="vertical-align: middle;"
+             [style.color]="x3d.color">label</i>
           {{x3d.description}}
         </md-checkbox>
       </li>
@@ -48,11 +47,10 @@
                  [min]="sectionMin"
                  [step]="sectionStep"
                  [value]="currentSection"
-                 (change)="updateSectionOutline(value.value)"
+                 (input)="updateSectionOutline(value.value)"
       ></md-slider>
       {{currentSection | number:'.1'}}mm
     </div>
-
 
     <scene pickMode="texCoord">
       <Viewpoint position="24.58412 2.30883 0.28578"
@@ -60,7 +58,6 @@
                  zNear="0" zFar="100" description=""></Viewpoint>
 
       <Transform translation="-4 -6 -8">
-
         <Group *ngFor="let x3d of specimen.x3dModels">
           <Inline [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
                   [attr.url]='specimen.path+x3d.name+".x3d"'></Inline>
@@ -73,11 +70,10 @@
             </IndexedLineSet>
           </shape>
         </Group>
-
       </Transform>
-
     </scene>
   </x3d>
+
 </div>
 
 

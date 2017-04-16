@@ -15,6 +15,6 @@ export class ChartService {
     this.activeSection.next(section);
   }
 
-  constructor() { }
+  constructor(){}
 
 }

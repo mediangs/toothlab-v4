@@ -139,7 +139,6 @@ export class ModelDetailPlainComponent implements OnInit {
   }
 
   setChartOptions(){
-
     this.chartOptions = {
       chart: {
         type: 'lineChart',
@@ -165,26 +164,21 @@ export class ModelDetailPlainComponent implements OnInit {
         },
         lines: {
           dispatch: {
-            elementClick: function(e) {
-              console.log('clicked!');
-              console.log(e);
-              console.log();
-              var point = e[0].point[0];
-
-
-              //this.chartService.getActiveSection(point);
-
-              //this.updateSectionOutline(e[0].point[0]);
+            elementClick: (e) => {
+              // var point = e[0].point[0];
+              // console.log(point);
+              // this.chartService.getActiveSection(point);
+              this.updateSectionOutline(e[0].point[0]);
             },
-            elementMouseover: function(e){
+            elementMouseover: (e)=>{
               console.log('mouse over');
               console.log(e);
+              this.updateSectionOutline(e[0].point[0]);
             },
             elementDblClick: function(e){
               console.log('mouse out!');
               console.log(e);
             }
-
           }
         }
       }
@@ -249,7 +243,6 @@ export class ModelDetailPlainComponent implements OnInit {
                 'cnl_pre_opp_major_outline',
                 'pre_mindist_line',
                 'pst_mindist_line'];
-
 
     // find nearest section level
     var section = this.sectionData.sections

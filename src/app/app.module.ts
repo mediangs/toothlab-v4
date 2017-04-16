@@ -2,12 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
-import 'hammerjs';
-
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-
-import {MaterialModule, MdButtonModule, MdCheckboxModule, MdSliderModule} from "@angular/material";
+import {MdButtonModule, MdCardModule, MdCheckboxModule, MdSliderModule, MdToolbarModule} from "@angular/material";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {nvD3} from 'ng2-nvd3';
 
@@ -18,15 +15,16 @@ import { MaterialComponent } from './material/material.component';
 import { PeopleComponent } from './people/people.component';
 import { PublicationsComponent } from './publications/publications.component';
 import { SpecimenListComponent } from './specimen-list/specimen-list.component';
+import { ModelDetailPlainComponent } from './model-detail-plain/model-detail-plain.component';
 
 import { PeopleService } from "./services/people.service";
 import { PublicationsService } from "./services/publications.service";
 import { SpecimenService } from "./services/specimen.service";
-import { ModelDetailPlainComponent } from './model-detail-plain/model-detail-plain.component';
+import {ChartService} from "./services/chart.service";
+
 import { KeysPipe } from './keys.pipe';
 import {Routing} from "./app.routes";
-import {ChartService} from "./services/chart.service";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import 'hammerjs';
 
 @NgModule({
   declarations: [
@@ -46,9 +44,11 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
+    MdToolbarModule,
     MdSliderModule,
     MdButtonModule,
     MdCheckboxModule,
+    MdCardModule,
     Routing
   ],
   providers: [
