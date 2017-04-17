@@ -6,6 +6,7 @@ import {Http} from "@angular/http";
 import {SectionModelSchema, ViewSectionSchema, DentinThicknessSchema} from "../services/section-schema";
 import {ChartService} from "../services/chart.service";
 import {namedlist} from "../shared/utils";
+import {isNullOrUndefined} from "util";
 
 declare let x3dom: any;
 declare let d3: any;
@@ -111,7 +112,6 @@ export class ModelDetailPlainComponent implements OnInit {
   }
 
   setChartData(data : SectionModelSchema){
-
     this.chartData = [
       {
         values: data.sections.map(d=> [d.section, d.mindist_ref.thickness]),   //values - represents the array of {x,y} data points
@@ -122,12 +122,11 @@ export class ModelDetailPlainComponent implements OnInit {
 
     Object.keys(data.sections[0].mindists_cmp).forEach(k=>{
       this.chartData.push({
-        values: data.sections.map(d=>[d.section, d.mindists_cmp[k].thickness] || 0),
+        // checking null
+        values: data.sections.map(d=>[d.section, typeof d.mindists_cmp[k] === 'undefined' ? null : d.mindists_cmp[k].thickness ]),
         key : k
       });
     });
-    console.log(this.chartData);
-
 
 
     /*
@@ -183,19 +182,7 @@ export class ModelDetailPlainComponent implements OnInit {
         lines: {
           dispatch: {
             elementClick: (e) => {
-              // var point = e[0].point[0];
-              // console.log(point);
-              // this.chartService.getActiveSection(point);
               this.updateSectionOutline(e[0].point[0]);
-            },
-            elementMouseover: (e)=>{
-              console.log('mouse over');
-              console.log(e);
-              this.updateSectionOutline(e[0].point[0]);
-            },
-            elementDblClick: function(e){
-              console.log('mouse out!');
-              console.log(e);
             }
           }
         }
