@@ -9,6 +9,7 @@ export interface SectionModelSchema {
   model: {
     name: string,
     evaluating_canal: number,
+    evaluating_canal_furcation: number,
     crv_name: string,
     crv_ref_length: number,
     length_buccal: number,

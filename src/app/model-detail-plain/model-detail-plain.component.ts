@@ -1,15 +1,14 @@
 import {Component, OnInit, ElementRef, Renderer} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {SpecimenService} from "../services/specimen.service";
-import {Specimen, X3dModel} from "../services/specimen-schema";
-import {Http} from "@angular/http";
-import {SectionModelSchema, ViewSectionSchema, DentinThicknessSchema} from "../services/section-schema";
-import {ChartService} from "../services/chart.service";
-import {namedlist} from "../shared/utils";
-import {isNullOrUndefined} from "util";
+import {ActivatedRoute, Router} from '@angular/router';
+import {SpecimenService} from '../services/specimen.service';
+import {Specimen, X3dModel} from '../services/specimen-schema';
+import {Http} from '@angular/http';
+import {SectionModelSchema, ViewSectionSchema} from '../services/section-schema';
+import {ChartService} from '../services/chart.service';
+import {namedlist} from '../shared/utils';
 
-declare let x3dom: any;
-declare let d3: any;
+declare const x3dom: any;
+declare const d3: any;
 
 
 @Component({
@@ -20,27 +19,32 @@ declare let d3: any;
 
 export class ModelDetailPlainComponent implements OnInit {
 
-  private title = "Root canal anatomy detail";
+  private title = 'Root canal anatomy detail';
   private zoomed = false;
 
   private specimen: Specimen;
   private specimenId: string;
 
-  private chartOptions;
-  private chartData;
 
-  color: string = '#0ff';
+  private chartOptionsDist;
+  private chartOptionsArea;
+  private chartOptionsTransportation;
+  private chartDataDist;
+  private chartDataArea;
+  private chartDataTransportation;
+
+  color = '#0ff';
   modelWidth = 100;
   modelHeight = 100;
 
-  sectionData: SectionModelSchema; //JSON
-  coordIndex : ViewSectionSchema = {} ;
+  sectionData: SectionModelSchema; // JSON
+  coordIndex: ViewSectionSchema = {} ;
   coordPoints: ViewSectionSchema = {} ;
 
-  currentSection:number = 0;
-  sectionMax : number;
-  sectionMin : number;
-  sectionStep : number;
+  currentSection = 0;
+  sectionMax: number;
+  sectionMin: number;
+  sectionStep: number;
 
 
   constructor(private specimenService: SpecimenService,
@@ -64,7 +68,7 @@ export class ModelDetailPlainComponent implements OnInit {
     });
 
 
-    //color-picker사용을 위해 소문자로 바꾸어야함 ??
+    // color-picker사용을 위해 소문자로 바꾸어야함 ??
     this.specimen.x3dModels.forEach(el => {
       el.color = el.color.toLowerCase();
     });
@@ -74,11 +78,11 @@ export class ModelDetailPlainComponent implements OnInit {
     this.specimenService.getSectionData(this.specimen)
       .subscribe(data => {
 
-        let DentinThickness = namedlist(['p_body', 'p_canal', 'thickness', 'angle']);
-        let CanalDimension = namedlist(['p1', 'p2', 'width']);
-        let FileMovement = namedlist(['vector', 'angle']);
+        const DentinThickness = namedlist(['p_body', 'p_canal', 'thickness', 'angle']);
+        const CanalDimension = namedlist(['p1', 'p2', 'width']);
+        const FileMovement = namedlist(['vector', 'angle']);
 
-        data.sections.forEach(d=>{
+        data.sections.forEach(d => {
           d.mindist_ref = DentinThickness(d.mindist_ref);
           d.mindist_ref_line = [d.mindist_ref.p_body, d.mindist_ref.p_canal];
 
@@ -91,81 +95,84 @@ export class ModelDetailPlainComponent implements OnInit {
           d.cnl_ref_narrow = CanalDimension(d.cnl_ref_narrow);
           d.cnl_ref_wide = CanalDimension(d.cnl_ref_wide);
 
-          Object.keys(d.cnls_cmp_narrow).forEach(k=>{d.cnls_cmp_narrow[k] = CanalDimension(d.cnls_cmp_narrow[k])});
-          Object.keys(d.cnls_cmp_wide).forEach(k=>{d.cnls_cmp_wide[k] = CanalDimension(d.cnls_cmp_wide[k])});
+          Object.keys(d.cnls_cmp_narrow).forEach(k => {d.cnls_cmp_narrow[k] = CanalDimension(d.cnls_cmp_narrow[k]); });
+          Object.keys(d.cnls_cmp_wide).forEach(k => {d.cnls_cmp_wide[k] = CanalDimension(d.cnls_cmp_wide[k]); });
 
           d.cnl_straightening = FileMovement(d.cnl_straightening);
-          Object.keys(d.cnls_transportation).forEach(k=>{d.cnls_transportation[k]=FileMovement(d.cnls_transportation[k])});
-          Object.keys(d.cnls_straightened).forEach(k=>{d.cnls_straightened[k]=FileMovement(d.cnls_straightened[k])});
+          Object.keys(d.cnls_transportation).forEach(k => {d.cnls_transportation[k] = FileMovement(d.cnls_transportation[k])});
+          Object.keys(d.cnls_straightened).forEach(k => {d.cnls_straightened[k] = FileMovement(d.cnls_straightened[k])});
         });
 
         this.sectionData = data;
-        this.sectionMax = Math.max.apply(Math, data.sections.map(o=>o.section));
-        this.sectionMin = Math.min.apply(Math, data.sections.map(o=>o.section));
-        this.sectionStep = (this.sectionMax - this.sectionMin) / (data.sections.length -1);
+        this.sectionMax = Math.max.apply(Math, data.sections.map(o => o.section));
+        this.sectionMin = Math.min.apply(Math, data.sections.map(o => o.section));
+        this.sectionStep = (this.sectionMax - this.sectionMin) / (data.sections.length - 1);
 
-        this.setChartData(data);
+        this.setChartDataDist(data);
+        this.setChartDataArea(data);
+        this.setChartDataTransportation(data);
       });
 
-    this.setChartOptions();
-
+    this.setChartOptionsDist();
+    this.setChartOptionsArea();
+  
   }
 
-  setChartData(data : SectionModelSchema){
-    this.chartData = [
+  setChartDataArea(data: SectionModelSchema) {
+    this.chartDataArea = [
       {
-        values: data.sections.map(d=> [d.section, d.mindist_ref.thickness]),   //values - represents the array of {x,y} data points
-        key: 'Thinnest dentin(pre)', //key  - the name of the series.
-        color: '#ff7f0e'  //color - optional: choose your own line color.
+        values: data.sections.map(d => [d.section, d.area_cnl_ref]),
+        key: 'Canal area, Pre (mm2)',
       },
     ];
-
-    Object.keys(data.sections[0].mindists_cmp).forEach(k=>{
-      this.chartData.push({
+    Object.keys(data.sections[0].area_cnls_cmp).forEach(k => {
+      this.chartDataArea.push({
         // checking null
-        values: data.sections.map(d=>[d.section, typeof d.mindists_cmp[k] === 'undefined' ? null : d.mindists_cmp[k].thickness ]),
+        values: data.sections.map(d => [d.section,
+          typeof d.area_cnls_cmp[k] === 'undefined' ? null : d.area_cnls_cmp[k]]),
+        key: k
+      });
+    });
+  }
+
+  setChartDataTransportation(data: SectionModelSchema) {
+    this.chartDataTransportation = [];
+    Object.keys(data.sections[0].cnls_transportation).forEach(k => {
+      this.chartDataTransportation.push({
+        value: data.sections.map(d => [d.section,
+          typeof d.cnls_transportation[k] === 'undefined' ? null : d.cnls_transportation[k]]),
         key : k
       });
     });
-
-
-    /*
-
-      {
-        values: data.sections.map(d=> [d.section, d.mindists_cmp[k].thickness]),
-        key: 'Thinnest dentin(post)',
-        color: '#2ca02c'
-      },
-
-      {
-        values: data.sections.map(d=> [d.section, d.cwt_ratio]),
-        key: 'Canal wall thinning(%)',
-      },
-
-      {
-        values: data.sections.map(d=> [d.section, d.area_cnl_pre]),
-        key: 'Canal area, Pre (mm2)',
-      },
-
-      {
-        values: data.sections.map(d=> [d.section, d.area_cnl_pst]),
-        key: 'Canal area, Post (mm2)',
-      }
-    ];
-    */
   }
 
-  setChartOptions(){
-    this.chartOptions = {
+  setChartDataDist(data: SectionModelSchema) {
+    this.chartDataDist = [
+      {
+        values: data.sections.map(d => [d.section,
+          d.section < data.model.evaluating_canal_furcation ? d.mindist_ref.thickness : null]),
+        key: 'Thinnest dentin(pre)', // key  - the name of the series.
+        color: '#ff7f0e'  // color - optional: choose your own line color.
+      },
+    ];
+
+    Object.keys(data.sections[0].mindists_cmp).forEach(k => {
+      this.chartDataDist.push({
+        // checking null
+        values: data.sections.map(d => [d.section,
+          d.section < data.model.evaluating_canal_furcation ?
+            (typeof d.mindists_cmp[k] === 'undefined' ? null : d.mindists_cmp[k].thickness) : null ]),
+        key : k
+      });
+    });
+  }
+
+  setChartOptionsDist() {
+    this.chartOptionsDist = {
       chart: {
         type: 'lineChart',
         height: 200,
-        margin : {
-          top: 20,
-          right: 40,
-          bottom: 40,
-          left: 80
-        },
+        margin : {top: 20, right: 40, bottom: 40, left: 80},
         x: function(d){ return d[0]; },
         y: function(d){ return d[1]; },
         useInteractiveGuideline: true,
@@ -174,21 +181,45 @@ export class ModelDetailPlainComponent implements OnInit {
         },
         yAxis: {
           axisLabel: 'Dentin thickness (mm)',
-          tickFormat: function(d){
-            return d3.format('.02f')(d);
-          },
+          tickFormat: function(d){ return d3.format('.02f')(d); },
           axisLabelDistance: -1
         },
         lines: {
           dispatch: {
-            elementClick: (e) => {
-              this.updateSectionOutline(e[0].point[0]);
-            }
+            elementClick: e => this.updateSectionOutline(e[0].point[0])
           }
         }
       }
     };
   }
+
+
+  setChartOptionsArea() {
+    this.chartOptionsArea = {
+      chart: {
+        type: 'lineChart',
+        height: 200,
+        margin : {top: 20, right: 40, bottom: 40, left: 80},
+        x: function(d){ return d[0]; },
+        y: function(d){ return d[1]; },
+        useInteractiveGuideline: true,
+        xAxis: {
+          axisLabel: 'Distance from apex(mm)'
+        },
+        yAxis: {
+          axisLabel: 'Area(mm^2)',
+          tickFormat: function(d){ return d3.format('.02f')(d); },
+          axisLabelDistance: -1
+        },
+        lines: {
+          dispatch: {
+            elementClick: e => this.updateSectionOutline(e[0].point[0])
+          }
+        }
+      }
+    };
+  }
+
 
   updateModelColor(x3d) {
     var el = document.getElementById(x3d.name + '__MA');

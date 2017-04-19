@@ -46,7 +46,6 @@
                  [thumb-label]="true"
                  [min]="sectionMin"
                  [step]="sectionStep"
-                 [value]="currentSection"
                  (input)="updateSectionOutline(value.value)"
       ></md-slider>
       {{currentSection | number:'.1'}}mm
@@ -78,7 +77,11 @@
 
 
 <div *ngIf="!zoomed">
-  <nvd3 [options]="chartOptions" [data]="chartData"></nvd3>
+  <nvd3 [options]="chartOptionsDist" [data]="chartDataDist"></nvd3>
+</div>
+
+<div *ngIf="!zoomed">
+  <nvd3 [options]="chartOptionsArea" [data]="chartDataArea"></nvd3>
 </div>
 
 
