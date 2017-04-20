@@ -21,8 +21,7 @@
         <button id="zoom-button" (click)="toggleZoom()">Zoom</button>
       </li>
     </ul>
-
-    <ul id="x3d-list">
+    <ul  id="x3d-list">
       <li *ngFor="let x3d of specimen.x3dModels">
         <md-checkbox
           #value
@@ -36,9 +35,17 @@
           {{x3d.description}}
         </md-checkbox>
       </li>
-      <button md-button (click)="dentinThicknessChart">Dentin Thickness</button>
-      <button md-button (click)="canalAreaChart">Canal Area</button>
+
+      <p></p>
+
+
+
+
+
+
+
     </ul>
+
 
     <div id="section-slider">
       <md-slider #value
@@ -79,7 +86,20 @@
 
 
 <div *ngIf="!zoomed">
-  <nvd3 [options]="chartOptionsMain" [data]="chartDataMain"></nvd3>
+  <form>
+    <md-select
+      name="chart"
+      placeholder="Select Chart"
+      [(ngModel)]="selectedValue"
+      (change) ="drawChart(selectedValue)">
+      <md-option *ngFor="let chart of charts" [value]="chart.value"  >
+        {{chart.viewValue}}
+      </md-option>
+    </md-select>
+  </form>
+
+  <h4 align="center">{{chartTitle}}</h4>
+  <nvd3 [options]="chartOptions" [data]="chartData"></nvd3>
 </div>
 
 

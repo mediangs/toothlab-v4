@@ -25,8 +25,9 @@ export class ModelDetailPlainComponent implements OnInit {
   private specimen: Specimen;
   private specimenId: string;
 
-  private chartDataMain;
-  private chartOptionsMain;
+  private chartTitle;
+  private chartData;
+  private chartOptions;
 
   color = '#0ff';
   modelWidth = 100;
@@ -41,6 +42,46 @@ export class ModelDetailPlainComponent implements OnInit {
   sectionMin: number;
   sectionStep: number;
 
+  charts = [
+    {
+      viewValue: 'Dentin Thickness',
+      value: {
+        title: 'Dentin Thickness',
+        data: ['mindist_ref', 'mindists_cmp', 'thickness', true],
+        options: ['Distance from apex(mm)', 'Dentin thickness (mm)']
+      }
+    },
+    {
+      viewValue: 'Canal Area',
+      value: {
+        title :'Canal Area',
+        data: ['area_cnl_ref', 'area_cnls_cmp', null, true],
+        options: ['Distance from apex(mm)', 'Area (mm^2)']
+      }
+    },
+    {
+      viewValue:'Canal Width',
+      value: {
+        title :'Canal Width(narrow)',
+        data: ['cnl_ref_narrow', 'cnls_cmp_narrow', 'width', false],
+        options:['Distance from apex(mm)', 'Canal width (mm)']
+      },
+    },
+    {
+      viewValue:'Transportation',
+      value:{
+        title :'Canal Transportation',
+        data: [null, 'cnls_transportation', 'distance', false],
+        options:['Distance from apex(mm)', 'Transportation (mm)']
+      },
+    },
+  ];
+
+  drawChart(v) {
+    this.chartTitle = v.title;
+    this.chartData = this.setChartData(v.data[0], v.data[1], v.data[2], v.data[3]);
+    this.chartOptions = this.setChartOptions(v.options[0], v.options[1]);
+  }
 
   constructor(private specimenService: SpecimenService,
               private route: ActivatedRoute,
@@ -62,7 +103,6 @@ export class ModelDetailPlainComponent implements OnInit {
       this.specimen = this.specimenService.getSpecimenById(this.specimenId);
     });
 
-
     // color-picker사용을 위해 소문자로 바꾸어야함 ??
     this.specimen.x3dModels.forEach(el => {
       el.color = el.color.toLowerCase();
@@ -75,7 +115,7 @@ export class ModelDetailPlainComponent implements OnInit {
 
         const DentinThickness = namedlist(['p_body', 'p_canal', 'thickness', 'angle']);
         const CanalDimension = namedlist(['p1', 'p2', 'width']);
-        const FileMovement = namedlist(['vector', 'angle']);
+        const FileMovement = namedlist(['vector', 'angle', 'distance']);
 
         data.sections.forEach(d => {
           d.mindist_ref = DentinThickness(d.mindist_ref);
@@ -103,41 +143,34 @@ export class ModelDetailPlainComponent implements OnInit {
         this.sectionMin = Math.min.apply(Math, data.sections.map(o => o.section));
         this.sectionStep = (this.sectionMax - this.sectionMin) / (data.sections.length - 1);
       });
-    this.chartDataMain = this.setChartData('mindist_ref', 'mindists_cmp', 'thickness', true);
-    //
-    // this.dentinThicknessChart();
-    this.chartOptionsMain = this.setChartOptions('Distance from apex(mm)', 'Dentin thickness (mm)');
+
+    //this.chartDentinThickness();
   }
 
-  dentinThicknessChart() {
-    this.chartDataMain = this.setChartData('mindist_ref', 'mindists_cmp', 'thickness', true);
-    // this.chartOptionsMain = [];
-  }
-
-  canalAreaChart() {
-    this.chartDataMain = this.setChartData('area_cnl_ref', 'area_cnls_cmp', null, true);
-    // this.chartOptionsMain = [];
-  }
 
   setChartData(ref, cmps, subElement= null, limit= false ) {
-    const retData = [
-      {
+    const retData = [];
+    if (ref) {
+      retData.push({
         values: this.sectionData.sections.map(d => [d.section,
           (limit && d.section > this.sectionData.model.evaluating_canal_furcation) ? null :
             subElement ? d[ref][subElement] : d[ref]]),
-        key: 'pre',
-      },
-    ];
-    Object.keys(this.sectionData.sections[0][cmps]).forEach(k => {
-      retData.push({
-        // checking null
-        values: this.sectionData.sections.map(d => [d.section,
-          typeof d[cmps][k] === 'undefined' ||
+        key: 'pre'
+      });
+    }
+
+    if (cmps) {
+      Object.keys(this.sectionData.sections[0][cmps]).forEach(k => {
+        retData.push({
+          // checking null
+          values: this.sectionData.sections.map(d => [d.section,
+            typeof d[cmps][k] === 'undefined' ||
             (limit && d.section > this.sectionData.model.evaluating_canal_furcation) ? null :
               subElement ? d[cmps][k][subElement] : d[cmps][k]]),
-        key: k
+          key: k
+        });
       });
-    });
+    }
     return retData;
   }
 
@@ -183,7 +216,6 @@ export class ModelDetailPlainComponent implements OnInit {
       this.renderer.setElementAttribute(
         document.getElementById(el.name + '__MA'),
         'diffuseColor', el.color);
-
     });
   }
 
@@ -219,22 +251,40 @@ export class ModelDetailPlainComponent implements OnInit {
 
 
   setIndexedLineSet(sectionLevel) {
-    var keys_outline = ['bdy_major_outline',
-                'cnl_ref_major_outline',
-                'mindist_ref_line'];
+    let keys_outline = ['bdy_major_outline',
+      'cnl_ref_major_outline',
+      'mindist_ref_line'];
+
+    let keys_outlines = ['cnls_cmp_major_outline'];
 
     // find nearest section level
-    var section = this.sectionData.sections
+    let section = this.sectionData.sections
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
     keys_outline.forEach(key => {
-      var outline = section[key];
+      let outline = section[key];
       this.coordPoints[key] = [].concat.apply([], outline);
       this.coordIndex[key]  = Object.keys(outline).map(x=>Number(x)).concat(0);
     });
 
+    keys_outlines.forEach(key=>{
+      let outlines = section[key];
+      Object.keys(outlines).forEach(k => {
+        let outline = outlines[k];
+        this.coordPoints[key+'.'+k] = [].concat.apply([], outline);
+        this.coordIndex[key+'.'+k]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+      });
+    });
 
+    this.sectionData.sections.map(d => {
+      if(d.section < this.sectionData.model.evaluating_canal_furcation) {
+        let outline = d.mindist_ref_line;
+        let key = 'mindist.'+d.section.toString();
+        this.coordPoints[key] = [].concat.apply([], outline);
+        this.coordIndex[key]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+      }
+    });
   }
 
   gotoAnatomy() {
