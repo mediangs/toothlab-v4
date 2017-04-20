@@ -36,6 +36,8 @@
           {{x3d.description}}
         </md-checkbox>
       </li>
+      <button md-button (click)="dentinThicknessChart">Dentin Thickness</button>
+      <button md-button (click)="canalAreaChart">Canal Area</button>
     </ul>
 
     <div id="section-slider">
@@ -77,12 +79,9 @@
 
 
 <div *ngIf="!zoomed">
-  <nvd3 [options]="chartOptionsDist" [data]="chartDataDist"></nvd3>
+  <nvd3 [options]="chartOptionsMain" [data]="chartDataMain"></nvd3>
 </div>
 
-<div *ngIf="!zoomed">
-  <nvd3 [options]="chartOptionsArea" [data]="chartDataArea"></nvd3>
-</div>
 
 
 <div>

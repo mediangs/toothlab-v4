@@ -3,7 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import {MdButtonModule, MdCardModule, MdCheckboxModule, MdSliderModule, MdToolbarModule} from "@angular/material";
+import {
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdSliderModule,
+  MdToolbarModule
+} from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {nvD3} from 'ng2-nvd3';
