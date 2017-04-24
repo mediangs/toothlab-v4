@@ -39,7 +39,7 @@ export interface SectionSchema{
   cnl_ref_major_outline : Array<Array<number>>,
   cnls_cmp_major_outline : any,
   cnls_cmp_major_p2_outline : any,
-  cnl_opp_ref_major_outline : Array<Array<number>>,
+  cnl_opp_ref_major_outline : any,
   cnls_opp_cmp_major_outline : any,
 
   // DentinThickness(p_body, p_canal, thickness, angle)

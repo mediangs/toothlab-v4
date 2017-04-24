@@ -14,40 +14,40 @@ export const SpecimenList: Specimen[] =
                 "name" : "root",
                 "description" : "Root surface",
                 "transparency" : 0.8,
-                "color" : "#00f" //  "0 0 1"
+                "color" : "#0000ff" //  "0 0 1"
             },
 
             {
                 "name" : "canal_pre",
                 "description" : "Root canal",
                 "transparency" : 0.7,
-                "color" : "#0f0" // "0 1 0"
+                "color" : "#00ff00" // "0 1 0"
             },
 
             {
                 "name" : "canal_axis",
                 "description" : "Canal axis",
                 "transparency" : 0.5,
-                "color" : "#f00" //"1 0 0"
+                "color" : "#ff0000" //"1 0 0"
             },
 
             {
                 "name" : "canal_axis_blx",
                 "description" : "Canal axis by BLX file",
                 "transparency" : 0.5,
-                "color" : "#0f0" //"0 1 0"
+                "color" : "#00ff00" //"0 1 0"
             },
             {
                 "name" : "canal_axis_ptu",
                 "description" : "Canal axis by ProTaper",
                 "transparency" : 0.5,
-                "color" : "#00f" //"0 0 1"
+                "color" : "#0000ff" //"0 0 1"
             },
             {
                 "name" : "canal_axis_rcp",
                 "description" : "Canal axis by Reciproc",
                 "transparency" : 0.5,
-                "color" : "#ff0" //"1 1 0"
+                "color" : "#ffff00" //"1 1 0"
             }
 
         ],
@@ -64,14 +64,14 @@ export const SpecimenList: Specimen[] =
                 "name" : "root",
                 "description" : "Root surface",
                 "transparency" : 0.9,
-                "color" : "#00f" // "0 0 1"
+                "color" : "#0000ff" // "0 0 1"
             },
 
             {
                 "name" : "canal_pre",
                 "description" : "Root canal",
                 "transparency" : 0.5,
-                "color" : "#0f0" // "0 1 0"
+                "color" : "#00ff00" // "0 1 0"
             }
         ],
         "path" :  basePath +"ljkcs01/"

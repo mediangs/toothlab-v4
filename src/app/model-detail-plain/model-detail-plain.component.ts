@@ -5,7 +5,7 @@ import {Specimen, X3dModel} from '../services/specimen-schema';
 import {Http} from '@angular/http';
 import {SectionModelSchema, ViewSectionSchema} from '../services/section-schema';
 import {ChartService} from '../services/chart.service';
-import {namedlist} from '../shared/utils';
+import {namedlist, repeatedColor} from '../shared/utils';
 
 declare const x3dom: any;
 declare const d3: any;
@@ -36,6 +36,7 @@ export class ModelDetailPlainComponent implements OnInit {
   sectionData: SectionModelSchema; // JSON
   coordIndex: ViewSectionSchema = {} ;
   coordPoints: ViewSectionSchema = {} ;
+  coordColor: ViewSectionSchema={};
 
   currentSection = 0;
   sectionMax: number;
@@ -251,9 +252,11 @@ export class ModelDetailPlainComponent implements OnInit {
 
 
   setIndexedLineSet(sectionLevel) {
-    let keys_outline = ['bdy_major_outline',
-      'cnl_ref_major_outline',
-      'mindist_ref_line'];
+    let keys_outline = [
+      {key : 'bdy_major_outline', color: '#00ff00'},
+      {key : 'cnl_ref_major_outline', color: '#ff0000'},
+      {key : 'cnl_opp_ref_major_outline', color: '#ffff00'},
+      {key : 'mindist_ref_line', color: '#00ff00'}];
 
     let keys_outlines = ['cnls_cmp_major_outline'];
 
@@ -262,10 +265,11 @@ export class ModelDetailPlainComponent implements OnInit {
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
-    keys_outline.forEach(key => {
-      let outline = section[key];
-      this.coordPoints[key] = [].concat.apply([], outline);
-      this.coordIndex[key]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+    keys_outline.forEach(obj => {
+      let outline = section[obj.key];
+      this.coordPoints[obj.key] = [].concat.apply([], outline);
+      this.coordIndex[obj.key]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+      this.coordColor[obj.key] = repeatedColor(obj.color, this.coordPoints[obj.key].length / 3);
     });
 
     keys_outlines.forEach(key=>{
@@ -283,6 +287,7 @@ export class ModelDetailPlainComponent implements OnInit {
         let key = 'mindist.'+d.section.toString();
         this.coordPoints[key] = [].concat.apply([], outline);
         this.coordIndex[key]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+        this.coordColor[key] = repeatedColor('#aa33ee', this.coordPoints[key].length / 3);
       }
     });
   }
