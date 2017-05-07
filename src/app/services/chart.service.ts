@@ -5,16 +5,20 @@ import {Subject} from "rxjs";
 export class ChartService {
 
   // Observable source
-  private activeSection = new Subject<number>();
+  private activeSectionSource = new Subject<number>();
+  private activeChartSource = new Subject<any>();
 
   // Observable stream
-  activeSection$ = this.activeSection.asObservable();
+  activeSection$ = this.activeSectionSource.asObservable();
+  activeChart$ = this.activeChartSource.asObservable();
 
-  getActiveSection(section : number){
-    console.log('getActiveSection');
-    this.activeSection.next(section);
+  setActiveSection(section : number){
+    // console.log('setActiveSection');
+    this.activeSectionSource.next(section);
   }
 
-  constructor(){}
-
+  setActiveChart(chartValue : any) {
+    console.log('setActiveChart');
+    this.activeChartSource.next(chartValue);
+  }
 }

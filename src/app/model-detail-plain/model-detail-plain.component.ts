@@ -28,6 +28,7 @@ export class ModelDetailPlainComponent implements OnInit {
   private chartTitle;
   private chartData;
   private chartOptions;
+  private isLoaded = false;
 
   color = '#0ff';
   modelWidth = 100;
@@ -43,45 +44,53 @@ export class ModelDetailPlainComponent implements OnInit {
   sectionMin: number;
   sectionStep: number;
 
-  charts = [
+  chartDefinitions = [
     {
+      id: 0,
       viewValue: 'Dentin Thickness',
-      value: {
-        title: 'Dentin Thickness',
-        data: ['mindist_ref', 'mindists_cmp', 'thickness', true],
-        options: ['Distance from apex(mm)', 'Dentin thickness (mm)']
-      }
+      title: 'Dentin Thickness',
+      data: {ref: 'mindist_ref', cmps: 'mindists_cmp', subElement: 'thickness', limit:true},
+      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Dentin thickness (mm)'}
     },
     {
+      id: 1,
       viewValue: 'Canal Area',
-      value: {
-        title :'Canal Area',
-        data: ['area_cnl_ref', 'area_cnls_cmp', null, true],
-        options: ['Distance from apex(mm)', 'Area (mm^2)']
-      }
+      title :'Canal Area',
+      data: {ref: 'area_cnl_ref', cmps: 'area_cnls_cmp', subElement: null, limit:true},
+      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Area (mm^2)'}
     },
     {
+      id: 2,
       viewValue:'Canal Width',
-      value: {
-        title :'Canal Width(narrow)',
-        data: ['cnl_ref_narrow', 'cnls_cmp_narrow', 'width', false],
-        options:['Distance from apex(mm)', 'Canal width (mm)']
-      },
+      title :'Canal Width(narrow)',
+      data: {ref: 'cnl_ref_narrow', cmps: 'cnls_cmp_narrow', subElement: 'width', limit: false},
+      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Canal width (mm)'}
     },
     {
+      id: 3,
       viewValue:'Transportation',
-      value:{
-        title :'Canal Transportation',
-        data: [null, 'cnls_transportation', 'distance', false],
-        options:['Distance from apex(mm)', 'Transportation (mm)']
-      },
+      title :'Canal Transportation',
+      data: {ref: null, cmps: 'cnls_transportation', subElement: 'distance', limit: false},
+      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Transportation (mm)'}
     },
   ];
 
-  drawChart(v) {
+  setActiveSection(sectionLevel:number) {
+    console.log(sectionLevel);
+    this.chartService.setActiveSection(sectionLevel);
+  }
+
+  setActiveChartType(chartID){
+    console.log(chartID);
+    this.chartService.setActiveChart(chartID);
+  }
+
+
+  drawChart(chartID) {
+    const v = this.chartDefinitions.find(data => data.id === chartID);
     this.chartTitle = v.title;
-    this.chartData = this.setChartData(v.data[0], v.data[1], v.data[2], v.data[3]);
-    this.chartOptions = this.setChartOptions(v.options[0], v.options[1]);
+    this.chartData = this.setChartData(v.data.ref, v.data.cmps, v.data.subElement, v.data.limit);
+    this.chartOptions = this.setChartOptions(v.options.xLabel, v.options.yLabel);
   }
 
   constructor(private specimenService: SpecimenService,
@@ -94,8 +103,19 @@ export class ModelDetailPlainComponent implements OnInit {
     chartService.activeSection$.subscribe(
       section => {
         this.currentSection = section;
+        if (this.isLoaded) {
+          this.setIndexedLineSet(section);
+        }
       }
     );
+    chartService.activeChart$.subscribe(
+      chartID => {
+        if(this.isLoaded) {
+          this.drawChart(chartID);
+        }
+      }
+    );
+
   }
 
   ngOnInit() {
@@ -112,7 +132,14 @@ export class ModelDetailPlainComponent implements OnInit {
     x3dom.reload();
 
     this.specimenService.getSectionData(this.specimen)
+      .finally(() => {
+        this.isLoaded = true;
+        console.log('Data loaded.');
+        console.log(this.chartDefinitions[0].id);
+        this.chartService.setActiveChart(this.chartDefinitions[0].id);
+      })
       .subscribe(data => {
+        console.log('Loading data...');
 
         const DentinThickness = namedlist(['p_body', 'p_canal', 'thickness', 'angle']);
         const CanalDimension = namedlist(['p1', 'p2', 'width']);
@@ -143,13 +170,15 @@ export class ModelDetailPlainComponent implements OnInit {
         this.sectionMax = Math.max.apply(Math, data.sections.map(o => o.section));
         this.sectionMin = Math.min.apply(Math, data.sections.map(o => o.section));
         this.sectionStep = (this.sectionMax - this.sectionMin) / (data.sections.length - 1);
+
       });
+
 
     //this.chartDentinThickness();
   }
 
 
-  setChartData(ref, cmps, subElement= null, limit= false ) {
+  setChartData(ref, cmps, subElement= null, limit ) {
     const retData = [];
     if (ref) {
       retData.push({
@@ -194,7 +223,8 @@ export class ModelDetailPlainComponent implements OnInit {
         },
         lines: {
           dispatch: {
-            elementClick: e => this.updateSectionOutline(e[0].point[0])
+            // elementClick: e => this.updateSectionOutline(e[0].point[0])
+            elementClick: e => this.chartService.setActiveSection(e[0].point[0])
           }
         }
       }
@@ -232,10 +262,7 @@ export class ModelDetailPlainComponent implements OnInit {
     this.setTransparency(x3d, checked ? x3d.prevTransparency : 1);
   }
 
-  updateSectionOutline(sectionLevel){
-    this.currentSection = sectionLevel;
-    this.setIndexedLineSet(this.currentSection);
-  }
+
 
   toggleZoom() {
 
@@ -254,7 +281,7 @@ export class ModelDetailPlainComponent implements OnInit {
   setIndexedLineSet(sectionLevel) {
     let keys_outline = [
       {key : 'bdy_major_outline', color: '#00ff00'},
-      {key : 'cnl_ref_major_outline', color: '#ff0000'},
+      {key : 'cnl_ref_major_outline', color: '#ff00ff'},
       {key : 'cnl_opp_ref_major_outline', color: '#ffff00'},
       {key : 'mindist_ref_line', color: '#00ff00'}];
 
