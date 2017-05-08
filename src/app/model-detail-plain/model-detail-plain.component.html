@@ -49,7 +49,7 @@
                  [thumb-label]="true"
                  [min]="sectionMin"
                  [step]="sectionStep"
-                 (input)="setActiveSection(value.id)"
+                 (input)="setActiveSection(value.value)"
       ></md-slider>
       {{currentSection | number:'.1'}}mm
     </div>

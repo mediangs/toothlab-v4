@@ -12,13 +12,11 @@ export class ChartService {
   activeSection$ = this.activeSectionSource.asObservable();
   activeChart$ = this.activeChartSource.asObservable();
 
-  setActiveSection(section : number){
-    // console.log('setActiveSection');
+  setActiveSection(section: number) {
     this.activeSectionSource.next(section);
   }
 
-  setActiveChart(chartValue : any) {
-    console.log('setActiveChart');
-    this.activeChartSource.next(chartValue);
+  setActiveChart(chartID: any) {
+    this.activeChartSource.next(chartID);
   }
 }

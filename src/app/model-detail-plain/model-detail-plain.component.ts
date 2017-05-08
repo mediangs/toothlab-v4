@@ -49,39 +49,37 @@ export class ModelDetailPlainComponent implements OnInit {
       id: 0,
       viewValue: 'Dentin Thickness',
       title: 'Dentin Thickness',
-      data: {ref: 'mindist_ref', cmps: 'mindists_cmp', subElement: 'thickness', limit:true},
-      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Dentin thickness (mm)'}
+      data: {ref: 'mindist_ref', cmps: 'mindists_cmp', subElement: 'thickness', limit: true},
+      options: {xLabel : 'Distance from apex(mm)' , yLabel: 'Dentin thickness (mm)'}
     },
     {
       id: 1,
       viewValue: 'Canal Area',
-      title :'Canal Area',
+      title : 'Canal Area',
       data: {ref: 'area_cnl_ref', cmps: 'area_cnls_cmp', subElement: null, limit:true},
-      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Area (mm^2)'}
+      options: {xLabel : 'Distance from apex(mm)' , yLabel: 'Area (mm^2)'}
     },
     {
       id: 2,
-      viewValue:'Canal Width',
-      title :'Canal Width(narrow)',
+      viewValue: 'Canal Width',
+      title : 'Canal Width(narrow)',
       data: {ref: 'cnl_ref_narrow', cmps: 'cnls_cmp_narrow', subElement: 'width', limit: false},
-      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Canal width (mm)'}
+      options: {xLabel : 'Distance from apex(mm)' , yLabel: 'Canal width (mm)'}
     },
     {
       id: 3,
-      viewValue:'Transportation',
-      title :'Canal Transportation',
+      viewValue: 'Transportation',
+      title : 'Canal Transportation',
       data: {ref: null, cmps: 'cnls_transportation', subElement: 'distance', limit: false},
-      options: {xLabel :'Distance from apex(mm)' ,yLabel: 'Transportation (mm)'}
+      options: {xLabel : 'Distance from apex(mm)' , yLabel: 'Transportation (mm)'}
     },
   ];
 
-  setActiveSection(sectionLevel:number) {
-    console.log(sectionLevel);
+  setActiveSection(sectionLevel: number) {
     this.chartService.setActiveSection(sectionLevel);
   }
 
-  setActiveChartType(chartID){
-    console.log(chartID);
+  setActiveChartType(chartID) {
     this.chartService.setActiveChart(chartID);
   }
 
@@ -110,7 +108,7 @@ export class ModelDetailPlainComponent implements OnInit {
     );
     chartService.activeChart$.subscribe(
       chartID => {
-        if(this.isLoaded) {
+        if (this.isLoaded) {
           this.drawChart(chartID);
         }
       }
@@ -135,7 +133,6 @@ export class ModelDetailPlainComponent implements OnInit {
       .finally(() => {
         this.isLoaded = true;
         console.log('Data loaded.');
-        console.log(this.chartDefinitions[0].id);
         this.chartService.setActiveChart(this.chartDefinitions[0].id);
       })
       .subscribe(data => {
@@ -169,12 +166,8 @@ export class ModelDetailPlainComponent implements OnInit {
         this.sectionData = data;
         this.sectionMax = Math.max.apply(Math, data.sections.map(o => o.section));
         this.sectionMin = Math.min.apply(Math, data.sections.map(o => o.section));
-        this.sectionStep = (this.sectionMax - this.sectionMin) / (data.sections.length - 1);
-
+        this.sectionStep = +((this.sectionMax - this.sectionMin) / (data.sections.length - 1)).toFixed(2);
       });
-
-
-    //this.chartDentinThickness();
   }
 
 
