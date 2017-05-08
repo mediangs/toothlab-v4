@@ -4,7 +4,7 @@
       #value
       name="chart"
       placeholder="Select Chart"
-      (change) ="setActiveChartType(value.selected.value.id)">
+      (change) ="drawChart(value.selected.value.id)">
       <md-option *ngFor="let chart of chartDefinitions" [value]="chart"  >
         {{chart.viewValue}}
       </md-option>

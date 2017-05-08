@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChartService} from "../services/chart.service";
 import {chartDefinitions} from "../shared/chart-definitions";
+import {SpecimenService} from "../services/specimen.service";
+import {DataService} from "../services/data.service";
 
 @Component({
   selector: 'app-specimen-chart',
@@ -9,30 +10,36 @@ import {chartDefinitions} from "../shared/chart-definitions";
 })
 export class SpecimenChartComponent implements OnInit {
 
-  @Input() sectionData;
+  @Input() specimenId;
+  private sectionData;
   private chartTitle;
   private chartData;
   private chartOptions;
+  private chartDefinitions;
 
-  constructor(private chartService: ChartService) {
-    chartService.activeChart$.subscribe( chartID => {
-      this.drawChart(chartID);
-    });
+  constructor(private specimenService: SpecimenService,
+              private dataService: DataService) {
+    this.chartDefinitions = chartDefinitions;
   }
 
   ngOnInit() {
-    console.log(this.sectionData);
 
+    this.specimenService
+      .getSectionDataById(this.specimenId)
+      .finally(() => {
+        console.log('SpecimenChart data loaded.');
+        this.drawChart(0); })
+      .subscribe(data => this.sectionData = data );
   }
 
-  drawChart(chartID) {
-    const v = chartDefinitions.find(data => data.id === chartID);
+  drawChart(chartId) {
+    const v = chartDefinitions.find(data => data.id === chartId);
     this.chartTitle = v.title;
     this.chartData = this.setChartData(v.data.ref, v.data.cmps, v.data.subElement, v.data.limit);
     this.chartOptions = this.setChartOptions(v.options.xLabel, v.options.yLabel);
   }
 
-  setChartData(ref, cmps, subElement= null, limit ) {
+  setChartData(ref, cmps, subElement = null, limit ) {
     const retData = [];
     if (ref) {
       retData.push({
@@ -77,8 +84,7 @@ export class SpecimenChartComponent implements OnInit {
         },
         lines: {
           dispatch: {
-            // elementClick: e => this.updateSectionOutline(e[0].point[0])
-            elementClick: e => this.chartService.setActiveSection(e[0].point[0])
+            elementClick: e => this.dataService.setActiveSection(e[0].point[0])
           }
         }
       }

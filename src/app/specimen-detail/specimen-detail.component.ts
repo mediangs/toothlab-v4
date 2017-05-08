@@ -1,12 +1,10 @@
 import {Component, OnInit, ElementRef, Renderer} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SpecimenService} from '../services/specimen.service';
-import {Specimen, X3dModel} from '../services/specimen-schema';
-import {Http} from '@angular/http';
-import {SectionModelSchema, ViewSectionSchema} from '../services/section-schema';
-import {ChartService} from '../services/chart.service';
-import {namedlist, repeatedColor} from '../shared/utils';
-import {chartDefinitions} from "../shared/chart-definitions";
+import {Specimen, X3dModel} from '../schemas/specimen-schema';
+import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
+import {repeatedColor} from '../shared/utils';
+import {DataService} from "../services/data.service";
 
 declare const x3dom: any;
 declare const d3: any;
@@ -20,7 +18,6 @@ declare const d3: any;
 
 export class SpecimenDetailComponent implements OnInit {
 
-  private title = 'Root canal anatomy detail';
   private zoomed = false;
 
   private specimen: Specimen;
@@ -44,50 +41,29 @@ export class SpecimenDetailComponent implements OnInit {
 
 
   setActiveSection(sectionLevel: number) {
-    this.chartService.setActiveSection(sectionLevel);
+    this.dataService.setActiveSection(sectionLevel);
   }
-
-  setActiveChartType(chartID) {
-    this.chartService.setActiveChart(chartID);
-  }
-
 
   constructor(private specimenService: SpecimenService,
               private route: ActivatedRoute,
               private router: Router,
               private renderer: Renderer,
-              private chartService : ChartService,
-              private el: ElementRef,
-              private http: Http) {
+              private dataService: DataService) {
 
-    chartService.activeSection$.subscribe( section => {
+    dataService.activeSection$.subscribe( section => {
         this.currentSection = section;
         this.setIndexedLineSet(section);
-        // if (this.isLoaded) { this.setIndexedLineSet(section); }
     });
 
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.specimenId = params['id'];
-      this.specimen = this.specimenService.getSpecimenById(this.specimenId);
-    });
-
-    // color-picker사용을 위해 소문자로 바꾸어야함 ??
-    this.specimen.x3dModels.forEach(el => {
-      el.color = el.color.toLowerCase();
-    });
-
-    x3dom.reload();
-
-    console.log('Loading data...');
-
+    this.route.params.subscribe(params => this.specimenId = params['id']);
+    this.specimen = this.specimenService.getSpecimenById(this.specimenId);
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
         this.isLoaded = true;
-        console.log('Data loaded.');
-        this.chartService.setActiveChart(chartDefinitions[0].id);
+        console.log('SpecimenDetail data loaded.');
       })
       .subscribe(data => {
         this.sectionData = data;
@@ -95,6 +71,15 @@ export class SpecimenDetailComponent implements OnInit {
         this.sectionMin = Math.min.apply(Math, data.sections.map(o => o.section));
         this.sectionStep = +((this.sectionMax - this.sectionMin) / (data.sections.length - 1)).toFixed(2);
       });
+
+    x3dom.reload();
+    /*
+    // color-picker사용을 위해 소문자로 바꾸어야함 ??
+    this.specimen.x3dModels.forEach(el => {
+      el.color = el.color.toLowerCase();
+    });
+    */
+
   }
 
   updateModelColor(x3d) {

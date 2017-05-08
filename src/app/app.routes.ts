@@ -10,7 +10,7 @@ import {SpecimenDetailComponent} from "./specimen-detail/specimen-detail.compone
 const routes = [
   {path : '', component : HomeComponent},
   {path : 'specimen-list', component : SpecimenListComponent},
-  {path : 'specimen-detail-plain/:id', component : SpecimenDetailComponent},
+  {path : 'specimen-detail/:id', component : SpecimenDetailComponent},
   {path : 'about', component : AboutComponent},
   {path : 'people', component : PeopleComponent},
   {path : 'publications', component : PublicationsComponent},

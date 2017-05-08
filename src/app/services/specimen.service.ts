@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Specimen} from './specimen-schema';
+import {Specimen} from '../schemas/specimen-schema';
 import {SpecimenList} from '../../assets/data/specimen.data';
 import {Http} from "@angular/http";
 import {Observable} from "rxjs";
-import {SectionModelSchema} from "./section-schema";
+import {SectionModelSchema} from "../schemas/section-schema";
 import {namedlist} from '../shared/utils';
 
 @Injectable()
@@ -15,13 +15,15 @@ export class SpecimenService{
       return SpecimenList;
   }
 
-  getSpecimenById(id : string) : Specimen{
-      return SpecimenList.filter(function(a){
-          return a.id== id;
-      })[0];
+  getSpecimenById(id : string): Specimen {
+      return this.getSpecimenList().find( s => s.id === id );
   }
 
-  getSectionData(specimen:Specimen) : Observable<SectionModelSchema>{
+  getSectionDataById(id: string): Observable<SectionModelSchema>{
+    return this.getSectionData(this.getSpecimenById(id));
+  }
+
+  getSectionData(specimen:Specimen): Observable<SectionModelSchema>{
     return this.http.get(specimen.path + specimen.sections)
       .map(res=>res.json())
       .map(data => {
@@ -51,7 +53,6 @@ export class SpecimenService{
         });
         return data;
       });
-
   }
 }
 

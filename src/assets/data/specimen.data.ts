@@ -1,4 +1,4 @@
-import {Specimen} from '../../app/services/specimen-schema';
+import {Specimen} from '../../app/schemas/specimen-schema';
 const basePath = "/assets/models/anatomy/";
 
 export const SpecimenList: Specimen[] =

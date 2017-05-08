@@ -10,6 +10,7 @@ import {
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {nvD3} from 'ng2-nvd3';
+import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { HomeComponent} from "./home/home.component";
@@ -23,11 +24,10 @@ import { SpecimenDetailComponent } from './specimen-detail/specimen-detail.compo
 import { PeopleService } from "./services/people.service";
 import { PublicationsService } from "./services/publications.service";
 import { SpecimenService } from "./services/specimen.service";
-import {ChartService} from "./services/chart.service";
+import { DataService } from "./services/data.service";
 
 import { KeysPipe } from './keys.pipe';
-import {Routing} from "./app.routes";
-import 'hammerjs';
+import { Routing } from "./app.routes";
 import { SpecimenChartComponent } from './specimen-chart/specimen-chart.component';
 
 @NgModule({
@@ -61,7 +61,7 @@ import { SpecimenChartComponent } from './specimen-chart/specimen-chart.componen
     PeopleService,
     PublicationsService,
     SpecimenService,
-    ChartService
+    DataService
   ],
   schemas: [NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent]

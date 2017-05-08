@@ -1,4 +1,4 @@
-import {People} from '../../app/services/people-schema';
+import {People} from '../../app/schemas/people-schema';
 
 export const people: People[] =
 [

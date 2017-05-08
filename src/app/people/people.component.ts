@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { People } from '../services/people-schema';
+import { People } from '../schemas/people-schema';
 import {PeopleService} from "../services/people.service";
 
 @Component({
