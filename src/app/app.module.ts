@@ -18,7 +18,7 @@ import { MaterialComponent } from './material/material.component';
 import { PeopleComponent } from './people/people.component';
 import { PublicationsComponent } from './publications/publications.component';
 import { SpecimenListComponent } from './specimen-list/specimen-list.component';
-import { ModelDetailPlainComponent } from './model-detail-plain/model-detail-plain.component';
+import { SpecimenDetailComponent } from './specimen-detail/specimen-detail.component';
 
 import { PeopleService } from "./services/people.service";
 import { PublicationsService } from "./services/publications.service";
@@ -28,6 +28,7 @@ import {ChartService} from "./services/chart.service";
 import { KeysPipe } from './keys.pipe';
 import {Routing} from "./app.routes";
 import 'hammerjs';
+import { SpecimenChartComponent } from './specimen-chart/specimen-chart.component';
 
 @NgModule({
   declarations: [
@@ -38,9 +39,10 @@ import 'hammerjs';
     PeopleComponent,
     PublicationsComponent,
     SpecimenListComponent,
-    ModelDetailPlainComponent,
+    SpecimenDetailComponent,
     KeysPipe,
     nvD3,
+    SpecimenChartComponent,
   ],
   imports: [
     BrowserModule,

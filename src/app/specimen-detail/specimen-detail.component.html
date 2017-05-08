@@ -80,21 +80,9 @@
 </div>
 
 
-<div *ngIf="!zoomed">
-  <form>
-    <md-select
-      #value
-      name="chart"
-      placeholder="Select Chart"
-      (change) ="setActiveChartType(value.selected.value.id)">
-      <md-option *ngFor="let chart of chartDefinitions" [value]="chart"  >
-        {{chart.viewValue}}
-      </md-option>
-    </md-select>
-  </form>
 
-  <h4 align="center">{{chartTitle}}</h4>
-  <nvd3 [options]="chartOptions" [data]="chartData"></nvd3>
+<div *ngIf="!zoomed">
+  <app-specimen-chart [sectionData]="sectionData"></app-specimen-chart>
 </div>
 
 

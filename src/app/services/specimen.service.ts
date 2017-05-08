@@ -24,9 +24,6 @@ export class SpecimenService{
     return this.http.get(specimen.path + specimen.sections)
       .map(res=>res.json());
   }
-
-
-
 }
 
 

@@ -5,12 +5,12 @@ import {MaterialComponent} from "./material/material.component";
 import {PeopleComponent} from "./people/people.component";
 import {PublicationsComponent} from "./publications/publications.component";
 import {SpecimenListComponent} from "./specimen-list/specimen-list.component";
-import {ModelDetailPlainComponent} from "./model-detail-plain/model-detail-plain.component";
+import {SpecimenDetailComponent} from "./specimen-detail/specimen-detail.component";
 
 const routes = [
   {path : '', component : HomeComponent},
   {path : 'specimen-list', component : SpecimenListComponent},
-  {path : 'specimen-detail-plain/:id', component : ModelDetailPlainComponent},
+  {path : 'specimen-detail-plain/:id', component : SpecimenDetailComponent},
   {path : 'about', component : AboutComponent},
   {path : 'people', component : PeopleComponent},
   {path : 'publications', component : PublicationsComponent},
