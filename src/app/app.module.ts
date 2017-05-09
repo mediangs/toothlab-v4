@@ -29,6 +29,7 @@ import { DataService } from "./services/data.service";
 import { KeysPipe } from './keys.pipe';
 import { Routing } from "./app.routes";
 import { SpecimenChartComponent } from './specimen-chart/specimen-chart.component';
+import { SectionInfoboxComponent } from './section-infobox/section-infobox.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { SpecimenChartComponent } from './specimen-chart/specimen-chart.componen
     KeysPipe,
     nvD3,
     SpecimenChartComponent,
+    SectionInfoboxComponent,
   ],
   imports: [
     BrowserModule,

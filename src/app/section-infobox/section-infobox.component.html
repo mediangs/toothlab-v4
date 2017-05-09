@@ -1,0 +1,55 @@
+<div *ngIf="cso">
+  Section : {{cso.section | number : numberFormat}} mm from apex
+  <ul>
+    <li>Thinnest dentin:</li>
+    <ul>
+      <li>pre : {{cso.mindist_ref['thickness'] | number : numberFormat}}</li>
+      <li *ngFor="let key of cso.mindists_cmp | keys">
+        {{key}} : {{cso.mindists_cmp[key]['thickness'] | number : numberFormat}}
+      </li>
+    </ul>
+
+    <li>Mesial dentin thickness:</li>
+    <ul>
+      <li>pre : {{cso.mesial_ref['thickness'] | number : numberFormat}}</li>
+      <li *ngFor="let key of cso.mesials_cmp | keys">
+        {{key}} : {{cso.mesials_cmp[key]['thickness'] | number : numberFormat}}
+      </li>
+    </ul>
+
+    <li>Distal dentin thickness:</li>
+    <ul>
+      <li>pre : {{cso.distal_ref['thickness'] | number : numberFormat}}</li>
+      <li *ngFor="let key of cso.distals_cmp | keys">
+        {{key}} : {{cso.distals_cmp[key]['thickness'] | number : numberFormat}}
+      </li>
+    </ul>
+
+    <li>Canal width(narrow):</li>
+    <ul>
+      <li>pre : {{cso.cnl_ref_narrow['width'] | number : numberFormat}}</li>
+      <li *ngFor="let key of cso.cnls_cmp_narrow | keys">
+        {{key}} : {{cso.cnls_cmp_narrow[key]['width'] | number : numberFormat}}
+      </li>
+    </ul>
+
+    <li>Canal width(wide):</li>
+    <ul>
+      <li>pre : {{cso.cnl_ref_wide['width'] | number : numberFormat}}</li>
+      <li *ngFor="let key of cso.cnls_cmp_wide | keys">
+        {{key}} : {{cso.cnls_cmp_wide[key]['width'] | number : numberFormat}}
+      </li>
+    </ul>
+
+    <li>Canal transportation :
+    <ul>
+      <li *ngFor="let key of cso.cnls_transportation | keys">
+        {{key}} : {{cso.cnls_transportation[key]['distance'] | number : numberFormat}}
+      </li>
+    </ul>
+
+
+  </ul>
+
+</div>
+

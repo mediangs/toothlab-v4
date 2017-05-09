@@ -52,7 +52,7 @@ export class SpecimenDetailComponent implements OnInit {
 
     dataService.activeSection$.subscribe( section => {
         this.currentSection = section;
-        this.setIndexedLineSet(section);
+        this.setSectionContourLine(section);
     });
 
   }
@@ -109,7 +109,7 @@ export class SpecimenDetailComponent implements OnInit {
       'transparency', element.transparency.toString());
   }
 
-  toggleModel(x3d : X3dModel, checked : boolean){
+  toggleModel(x3d: X3dModel, checked : boolean){
     this.setTransparency(x3d, checked ? x3d.prevTransparency : 1);
   }
 
@@ -117,7 +117,7 @@ export class SpecimenDetailComponent implements OnInit {
 
   toggleZoom() {
 
-    var button = document.getElementById('zoom-button');
+    const button = document.getElementById('zoom-button');
     if (this.zoomed) {
       button.style.backgroundColor = "#202021";
     } else {
@@ -129,42 +129,42 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
 
-  setIndexedLineSet(sectionLevel) {
-    let keys_outline = [
+  setSectionContourLine(sectionLevel) {
+    const keys_outline = [
       {key : 'bdy_major_outline', color: '#00ff00'},
       {key : 'cnl_ref_major_outline', color: '#ff00ff'},
       {key : 'cnl_opp_ref_major_outline', color: '#ffff00'},
       {key : 'mindist_ref_line', color: '#00ff00'}];
 
-    let keys_outlines = ['cnls_cmp_major_outline'];
+    const keys_outlines = ['cnls_cmp_major_outline'];
 
     // find nearest section level
-    let section = this.sectionData.sections
+    const section = this.sectionData.sections
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
     keys_outline.forEach(obj => {
-      let outline = section[obj.key];
+      const outline = section[obj.key];
       this.coordPoints[obj.key] = [].concat.apply([], outline);
-      this.coordIndex[obj.key]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+      this.coordIndex[obj.key]  = Object.keys(outline).map(x => Number(x)).concat(0);
       this.coordColor[obj.key] = repeatedColor(obj.color, this.coordPoints[obj.key].length / 3);
     });
 
-    keys_outlines.forEach(key=>{
-      let outlines = section[key];
+    keys_outlines.forEach(key => {
+      const outlines = section[key];
       Object.keys(outlines).forEach(k => {
-        let outline = outlines[k];
-        this.coordPoints[key+'.'+k] = [].concat.apply([], outline);
-        this.coordIndex[key+'.'+k]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+        const outline = outlines[k];
+        this.coordPoints[key + '.' + k] = [].concat.apply([], outline);
+        this.coordIndex[key + '.' + k]  = Object.keys(outline).map(x => Number(x)).concat(0);
       });
     });
 
     this.sectionData.sections.map(d => {
-      if(d.section < this.sectionData.model.evaluating_canal_furcation) {
-        let outline = d.mindist_ref_line;
-        let key = 'mindist.'+d.section.toString();
+      if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
+        const outline = d.mindist_ref_line;
+        const key = 'mindist.' + d.section.toString();
         this.coordPoints[key] = [].concat.apply([], outline);
-        this.coordIndex[key]  = Object.keys(outline).map(x=>Number(x)).concat(0);
+        this.coordIndex[key]  = Object.keys(outline).map(x => Number(x)).concat(0);
         this.coordColor[key] = repeatedColor('#aa33ee', this.coordPoints[key].length / 3);
       }
     });
@@ -175,6 +175,6 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   reload() {
-    this.restoreModelStatus()
+    this.restoreModelStatus();
   }
 }

@@ -8,8 +8,13 @@
       <md-card-title>{{specimen.id}}</md-card-title>
     </md-card-header>
     <md-card-content>
-      {{specimen.location}}<br>
-      {{specimen.description}}<br>
+      <div *ngIf="isLoaded">
+        {{specimen.location}}<br>
+        {{specimen.description}}<br>
+      </div>
+      <div *ngIf="!isLoaded">
+        <h2>Loading tooth data...</h2>
+      </div>
     </md-card-content>
   </md-card>
 
@@ -45,10 +50,11 @@
       <md-slider #value
                  vertical="true"
                  [(ngModel)]="currentSection"
+                 [disabled] = "!isLoaded"
                  [max]="sectionMax"
-                 [thumb-label]="true"
                  [min]="sectionMin"
                  [step]="sectionStep"
+                 [thumb-label]="true"
                  (input)="setActiveSection(value.value)"
       ></md-slider>
       {{currentSection | number:'.1'}}mm
@@ -78,6 +84,9 @@
   </x3d>
 
 </div>
+
+
+<app-section-infobox [specimenId]="specimenId"></app-section-infobox>
 
 
 
