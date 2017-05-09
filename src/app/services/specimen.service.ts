@@ -23,6 +23,28 @@ export class SpecimenService {
     return this.getSectionData(this.getSpecimenById(id));
   }
 
+  getSimpleSectionDataById(id: string): Observable<SectionModelSchema> {
+    return this.getSimpleSectionData(this.getSpecimenById(id));
+  }
+
+  getSimpleSectionData(specimen: Specimen): Observable<SectionModelSchema> {
+    return this.getSectionData(specimen)
+      .map(data => {
+        data.sections.forEach( d => {
+
+          [ 'bdy_major_outline',
+            'cnl_ref_major_outline',
+            'cnls_cmp_major_outline',
+            'cnls_cmp_major_p2_outline',
+            'cnl_opp_ref_major_outline',
+            'cnls_opp_cmp_major_outline'
+          ].forEach(e => d[e] = null);
+
+        });
+        return data;
+      });
+  }
+
   getSectionData(specimen: Specimen): Observable<SectionModelSchema> {
     return this.http.get(specimen.path + specimen.sections)
       .map(res => res.json())
@@ -50,6 +72,12 @@ export class SpecimenService {
               dist_ref_line: 'distal_ref_line',
               dists_cmp: 'distals_cmp',
               dists_cmp_line: 'distals_cmp_line'
+            },
+            {
+              dist_ref: 'lateral_ref',
+              dist_ref_line: 'lateral_ref_line',
+              dists_cmp: 'laterals_cmp',
+              dists_cmp_line: 'laterals_cmp_line'
             },
           ].forEach(e => {
             d[e.dist_ref] = DentinThickness(d[e.dist_ref]);

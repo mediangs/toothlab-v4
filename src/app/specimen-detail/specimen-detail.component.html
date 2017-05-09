@@ -13,7 +13,13 @@
         {{specimen.description}}<br>
       </div>
       <div *ngIf="!isLoaded">
-        <h2>Loading tooth data...</h2>
+        <h3>Loading tooth data...</h3>
+        <md-progress-bar
+          color="primary"
+          mode="indeterminate">
+        </md-progress-bar>
+
+
       </div>
     </md-card-content>
   </md-card>
@@ -85,10 +91,11 @@
 
 </div>
 
+<button (click)="toggleSectionInfo()">Section Info</button>
 
-<app-section-infobox [specimenId]="specimenId"></app-section-infobox>
-
-
+<div *ngIf="!zoomed && displaySectionInfo">
+  <app-section-infobox [specimenId]="specimenId"></app-section-infobox>
+</div>
 
 <div *ngIf="!zoomed">
   <app-specimen-chart [specimenId]="specimenId"></app-specimen-chart>

@@ -24,6 +24,7 @@ export class SpecimenDetailComponent implements OnInit {
   private specimenId: string;
 
   private isLoaded = false;
+  displaySectionInfo = false;
 
   color = '#0ff';
   modelWidth = 100;
@@ -40,6 +41,9 @@ export class SpecimenDetailComponent implements OnInit {
   sectionStep: number;
 
 
+  toggleSectionInfo(){
+    this.displaySectionInfo = !this.displaySectionInfo;
+  }
   setActiveSection(sectionLevel: number) {
     this.dataService.setActiveSection(sectionLevel);
   }

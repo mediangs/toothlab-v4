@@ -27,7 +27,7 @@ export class SectionInfoboxComponent implements OnInit {
 
   ngOnInit() {
     this.specimenService
-      .getSectionDataById(this.specimenId)
+      .getSimpleSectionDataById(this.specimenId)
       .finally(() => {
         console.log('Section infobox data loaded.');
         // console.log(this.sectionData);
