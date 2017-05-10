@@ -65,14 +65,14 @@ export class SpecimenChartComponent implements OnInit {
     return retData;
   }
 
-  setChartOptions(xLabel, yLabel, yMax=null) {
+  setChartOptions(xLabel, yLabel, yMax= null) {
     return {
       chart: {
         type: 'lineChart',
         height: 200,
         margin : {top: 20, right: 40, bottom: 40, left: 80},
         x: function(d){ return d[0]; },
-        y: function(d){ return yMax ? ( d[1] ? Math.min(d[1],yMax) : null) : d[1]; },
+        y: function(d){ return yMax ? ( d[1] ? Math.min(d[1], yMax) : null) : d[1]; },
         useInteractiveGuideline: true,
         xAxis: {
           axisLabel: xLabel

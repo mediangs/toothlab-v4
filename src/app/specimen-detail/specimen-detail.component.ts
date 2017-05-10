@@ -33,7 +33,7 @@ export class SpecimenDetailComponent implements OnInit {
   sectionData: SectionModelSchema; // JSON
   coordIndex: ViewSectionSchema = {} ;
   coordPoints: ViewSectionSchema = {} ;
-  coordColor: ViewSectionSchema={};
+  coordColor: ViewSectionSchema = {};
 
   currentSection = 0;
   sectionMax: number;
@@ -41,7 +41,7 @@ export class SpecimenDetailComponent implements OnInit {
   sectionStep: number;
 
 
-  toggleSectionInfo(){
+  toggleSectionInfo() {
     this.displaySectionInfo = !this.displaySectionInfo;
   }
   setActiveSection(sectionLevel: number) {
@@ -87,7 +87,7 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   updateModelColor(x3d) {
-    var el = document.getElementById(x3d.name + '__MA');
+    const el = document.getElementById(x3d.name + '__MA');
     if (el) {
       this.renderer.setElementAttribute(el, 'diffuseColor', x3d.color);
     }
@@ -117,8 +117,6 @@ export class SpecimenDetailComponent implements OnInit {
     this.setTransparency(x3d, checked ? x3d.prevTransparency : 1);
   }
 
-
-
   toggleZoom() {
 
     const button = document.getElementById('zoom-button');
@@ -131,7 +129,6 @@ export class SpecimenDetailComponent implements OnInit {
     this.zoomed = !this.zoomed;
 
   }
-
 
   setSectionContourLine(sectionLevel) {
     const keys_outline = [
@@ -146,12 +143,16 @@ export class SpecimenDetailComponent implements OnInit {
     const section = this.sectionData.sections
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
+    const sectionId = this.sectionData.sections
+      .reduce((prev, curr) =>
+        Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev)
+      .section;
 
     keys_outline.forEach(obj => {
-      const outline = section[obj.key];
-      this.coordPoints[obj.key] = [].concat.apply([], outline);
-      this.coordIndex[obj.key]  = Object.keys(outline).map(x => Number(x)).concat(0);
-      this.coordColor[obj.key] = repeatedColor(obj.color, this.coordPoints[obj.key].length / 3);
+      const coordInfo = this.getCoordInfo(obj.key, sectionId, this.sectionData, obj.color);
+      this.coordPoints[obj.key] = coordInfo.coordPoints;
+      this.coordIndex[obj.key]  = coordInfo.coordIndex;
+      this.coordColor[obj.key] = coordInfo.coordColor;
     });
 
     keys_outlines.forEach(key => {
@@ -163,6 +164,22 @@ export class SpecimenDetailComponent implements OnInit {
       });
     });
 
+    const keys_line = [
+      { key: 'mindist_ref_line', color : '#aa33ee'}
+    ];
+    keys_line.forEach(e => {
+      this.sectionData.sections.map(d => {
+        if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
+          const line = d[e.key];
+          const key = e.key + '.' + d.section.toString();
+          this.coordPoints[key] = [].concat.apply([], line);
+          this.coordIndex[key]  = Object.keys(line).map(x => Number(x)).concat(0);
+          this.coordColor[key] = repeatedColor(e.color, this.coordPoints[key].length / 3);
+        }
+      });
+      console.log(this.coordIndex);
+    });
+    /*
     this.sectionData.sections.map(d => {
       if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
         const outline = d.mindist_ref_line;
@@ -172,6 +189,30 @@ export class SpecimenDetailComponent implements OnInit {
         this.coordColor[key] = repeatedColor('#aa33ee', this.coordPoints[key].length / 3);
       }
     });
+
+    this.sectionData.sections.map(d => {
+      if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
+        const outline = d.mindist_ref_line;
+        const key = 'mindist.' + d.section.toString();
+        this.coordPoints[key] = [].concat.apply([], outline);
+        this.coordIndex[key]  = Object.keys(outline).map(x => Number(x)).concat(0);
+        this.coordColor[key] = repeatedColor('#aa33ee', this.coordPoints[key].length / 3);
+      }
+    });
+    */
+
+
+  }
+
+  getCoordInfo(element: string, sectionId: number,
+               sectionData: SectionModelSchema, elementColor: string) {
+
+    const outline = sectionData.sections.find( s => s.section === sectionId)[element];
+    const coordPoints = [].concat.apply([], outline);
+    const coordIndex  = Object.keys(outline).map(x => Number(x)).concat(0);
+    const coordColor = repeatedColor(elementColor, coordPoints.length / 3);
+
+    return {coordPoints : coordPoints, coordIndex : coordIndex, coordColor : coordColor};
   }
 
   gotoAnatomy() {
