@@ -131,87 +131,70 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   setSectionContourLine(sectionLevel) {
-    const keys_outline = [
-      {key : 'bdy_major_outline', color: '#00ff00'},
-      {key : 'cnl_ref_major_outline', color: '#ff00ff'},
-      {key : 'cnl_opp_ref_major_outline', color: '#ffff00'},
-      {key : 'mindist_ref_line', color: '#00ff00'}];
 
-    const keys_outlines = ['cnls_cmp_major_outline'];
+    const keys_outline = [
+      {key : 'bdy_major_outline', color: '#00ff00', nested: false, multiSections: false, visible: false},
+      {key : 'cnl_ref_major_outline', color: '#ff00ff', nested: false, multiSections: false, visible: true},
+      {key : 'cnl_opp_ref_major_outline', color: '#ffff00', nested: false, multiSections: false, visible: true},
+      {key : 'mindist_ref_line', color: '#00ff00', nested: false, multiSections: false, visible: true},
+
+      {key : 'cnls_cmp_major_outline', color: '', nested: true, multiSections: false, visible: true}
+
+      { key: 'mindist_ref_line', color : '#aa33ee', nested: false, multiSections: true, visible: false}
+
+    ];
+
+
+    const keys_line = [
+    ];
+
 
     // find nearest section level
     const section = this.sectionData.sections
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
-    const sectionId = this.sectionData.sections
-      .reduce((prev, curr) =>
-        Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev)
-      .section;
 
-    keys_outline.forEach(obj => {
-      const coordInfo = this.getCoordInfo(obj.key, sectionId, this.sectionData, obj.color);
-      this.coordPoints[obj.key] = coordInfo.coordPoints;
-      this.coordIndex[obj.key]  = coordInfo.coordIndex;
-      this.coordColor[obj.key] = coordInfo.coordColor;
+    keys_outline
+      .filter(obj => obj.visible && !obj.nested && !obj.multiSections)
+      .forEach(obj => {
+        const coordInfo = this.getCoordInfo(obj.color, section[obj.key]);
+        this.coordPoints[obj.key] = coordInfo.coordPoints;
+        this.coordIndex[obj.key]  = coordInfo.coordIndex;
+        this.coordColor[obj.key] = coordInfo.coordColor;
     });
 
-    keys_outlines.forEach(key => {
-      const outlines = section[key];
-      Object.keys(outlines).forEach(k => {
-        const outline = outlines[k];
-        this.coordPoints[key + '.' + k] = [].concat.apply([], outline);
-        this.coordIndex[key + '.' + k]  = Object.keys(outline).map(x => Number(x)).concat(0);
-      });
+    keys_outline
+      .filter(obj => obj.visible && obj.nested && !obj.multiSections)
+      .forEach(obj => {
+        const outlines = section[obj.key];
+        Object.keys(outlines).forEach(k => {
+          const coordInfo = this.getCoordInfo('#aaaa00', outlines[k]);
+          this.coordPoints[obj + '.' + k] = coordInfo.coordPoints;
+          this.coordIndex[obj + '.' + k]  = coordInfo.coordIndex;
+          this.coordColor[obj + '.' + k]  = coordInfo.coordColor;
+        });
     });
 
-    const keys_line = [
-      { key: 'mindist_ref_line', color : '#aa33ee'}
-    ];
-    keys_line.forEach(e => {
-      this.sectionData.sections.map(d => {
-        if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
-          const line = d[e.key];
-          const key = e.key + '.' + d.section.toString();
-          this.coordPoints[key] = [].concat.apply([], line);
-          this.coordIndex[key]  = Object.keys(line).map(x => Number(x)).concat(0);
-          this.coordColor[key] = repeatedColor(e.color, this.coordPoints[key].length / 3);
-        }
-      });
-      console.log(this.coordIndex);
+    keys_outline
+      .filter(obj => obj.visible && !obj.nested && obj.multiSections)
+      .forEach(obj => {
+        this.sectionData.sections.map(d => {
+          if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
+            const coordInfo = this.getCoordInfo(obj.color, d[obj.key]);
+            const key = obj.key + '.' + d.section.toString();
+            this.coordPoints[key] = coordInfo.coordPoints;
+            this.coordIndex[key]  = coordInfo.coordIndex;
+            this.coordColor[key] = coordInfo.coordColor;
+          }
+        });
     });
-    /*
-    this.sectionData.sections.map(d => {
-      if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
-        const outline = d.mindist_ref_line;
-        const key = 'mindist.' + d.section.toString();
-        this.coordPoints[key] = [].concat.apply([], outline);
-        this.coordIndex[key]  = Object.keys(outline).map(x => Number(x)).concat(0);
-        this.coordColor[key] = repeatedColor('#aa33ee', this.coordPoints[key].length / 3);
-      }
-    });
-
-    this.sectionData.sections.map(d => {
-      if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
-        const outline = d.mindist_ref_line;
-        const key = 'mindist.' + d.section.toString();
-        this.coordPoints[key] = [].concat.apply([], outline);
-        this.coordIndex[key]  = Object.keys(outline).map(x => Number(x)).concat(0);
-        this.coordColor[key] = repeatedColor('#aa33ee', this.coordPoints[key].length / 3);
-      }
-    });
-    */
-
 
   }
 
-  getCoordInfo(element: string, sectionId: number,
-               sectionData: SectionModelSchema, elementColor: string) {
-
-    const outline = sectionData.sections.find( s => s.section === sectionId)[element];
+  getCoordInfo(elementColor: string, outline) {
     const coordPoints = [].concat.apply([], outline);
     const coordIndex  = Object.keys(outline).map(x => Number(x)).concat(0);
     const coordColor = repeatedColor(elementColor, coordPoints.length / 3);
-
     return {coordPoints : coordPoints, coordIndex : coordIndex, coordColor : coordColor};
   }
 
