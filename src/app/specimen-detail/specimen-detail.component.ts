@@ -113,7 +113,7 @@ export class SpecimenDetailComponent implements OnInit {
       'transparency', element.transparency.toString());
   }
 
-  toggleModel(x3d: X3dModel, checked : boolean){
+  toggleModel(x3d: X3dModel, checked: boolean){
     this.setTransparency(x3d, checked ? x3d.prevTransparency : 1);
   }
 
@@ -132,63 +132,79 @@ export class SpecimenDetailComponent implements OnInit {
 
   setSectionContourLine(sectionLevel) {
 
-    const keys_outline = [
-      {key : 'bdy_major_outline', color: '#00ff00', nested: false, multiSections: false, visible: false},
-      {key : 'cnl_ref_major_outline', color: '#ff00ff', nested: false, multiSections: false, visible: true},
-      {key : 'cnl_opp_ref_major_outline', color: '#ffff00', nested: false, multiSections: false, visible: true},
-      {key : 'mindist_ref_line', color: '#00ff00', nested: false, multiSections: false, visible: true},
-
-      {key : 'cnls_cmp_major_outline', color: '', nested: true, multiSections: false, visible: true}
-
-      { key: 'mindist_ref_line', color : '#aa33ee', nested: false, multiSections: true, visible: false}
-
+    let keys_outline = [
+      {key: 'bdy_major_outline', name: 'Root', color: '#00ff00', multiSections: false, visible: true},
+      {key: 'cnl_ref_major_outline', name: 'Canal-Pre', color: '#ff00ff', multiSections: false, visible: true},
+      {key: 'cnl_opp_ref_major_outline', name: '', color: '#ffff00', multiSections: false, visible: true},
+      {key: 'mindist_ref_line', name: 'Thinnest dentin', color: '#00ff00', multiSections: false, visible: true},
+      {key: 'mindist_ref_line', name: 'Thinnest dentin-All', color : '#aa33ee', multiSections: true, visible: false}
     ];
 
-
-    const keys_line = [
+    const nested_outline = [
+      {key : 'cnls_cmp_major_outline', color: '', multiSections: false, visible: true},
     ];
-
 
     // find nearest section level
     const section = this.sectionData.sections
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
-    keys_outline
-      .filter(obj => obj.visible && !obj.nested && !obj.multiSections)
-      .forEach(obj => {
-        const coordInfo = this.getCoordInfo(obj.color, section[obj.key]);
-        this.coordPoints[obj.key] = coordInfo.coordPoints;
-        this.coordIndex[obj.key]  = coordInfo.coordIndex;
-        this.coordColor[obj.key] = coordInfo.coordColor;
+    nested_outline.forEach(e => {
+      keys_outline = keys_outline.concat(this.flattenOutline(e, section));
+
+      console.log(keys_outline);
     });
 
     keys_outline
-      .filter(obj => obj.visible && obj.nested && !obj.multiSections)
+      .filter(obj => obj.visible)
       .forEach(obj => {
-        const outlines = section[obj.key];
-        Object.keys(outlines).forEach(k => {
-          const coordInfo = this.getCoordInfo('#aaaa00', outlines[k]);
-          this.coordPoints[obj + '.' + k] = coordInfo.coordPoints;
-          this.coordIndex[obj + '.' + k]  = coordInfo.coordIndex;
-          this.coordColor[obj + '.' + k]  = coordInfo.coordColor;
-        });
-    });
-
-    keys_outline
-      .filter(obj => obj.visible && !obj.nested && obj.multiSections)
-      .forEach(obj => {
-        this.sectionData.sections.map(d => {
-          if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
-            const coordInfo = this.getCoordInfo(obj.color, d[obj.key]);
-            const key = obj.key + '.' + d.section.toString();
+        if (!obj.multiSections) {
+          const coordInfo = this.getCoordInfo(obj.color, section[obj.key]);
+          this.coordPoints[obj.key] = coordInfo.coordPoints;
+          this.coordIndex[obj.key]  = coordInfo.coordIndex;
+          this.coordColor[obj.key] = coordInfo.coordColor;
+        }
+        /*
+        if (obj.nested && !obj.multiSections) {
+          const outlines = section[obj.key];
+          Object.keys(outlines).forEach(k => {
+            const coordInfo = this.getCoordInfo('#aaaa00', outlines[k]);
+            const key = obj.key + '.' + k;
             this.coordPoints[key] = coordInfo.coordPoints;
             this.coordIndex[key]  = coordInfo.coordIndex;
-            this.coordColor[key] = coordInfo.coordColor;
-          }
-        });
-    });
+            this.coordColor[key]  = coordInfo.coordColor;
+          });
+        }
+        */
+        if (obj.multiSections ) {
+          this.sectionData.sections.map(d => {
+            if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
+              const coordInfo = this.getCoordInfo(obj.color, d[obj.key]);
+              const key = obj.key + '.' + d.section.toString();
+              this.coordPoints[key] = coordInfo.coordPoints;
+              this.coordIndex[key]  = coordInfo.coordIndex;
+              this.coordColor[key] = coordInfo.coordColor;
+            }
+          });
+        }
+      });
 
+  }
+
+  flattenOutline(outline, section) {
+    const flattened = [];
+    const cmps = section[outline.key];
+    Object.keys(cmps).forEach( k => {
+      const key = outline.key + '.' + k;
+      flattened.push({
+        key: key,
+        name: 'Canal-' + k,
+        color : '#aa33ee',
+        multiSections: outline.multiSections,
+        visible: outline.visible
+      });
+    });
+    return flattened;
   }
 
   getCoordInfo(elementColor: string, outline) {
