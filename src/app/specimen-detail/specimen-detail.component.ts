@@ -31,14 +31,10 @@ export class SpecimenDetailComponent implements OnInit {
   modelHeight = 100;
 
   sectionData: SectionModelSchema; // JSON
-  coordIndex: ViewSectionSchema = {} ;
-  coordPoints: ViewSectionSchema = {} ;
-  coordColor: ViewSectionSchema = {};
+  coordInfo = {}; // coordPoints, coordIndex, coordColor
 
   currentSection = 0;
-  sectionMax: number;
-  sectionMin: number;
-  sectionStep: number;
+  sliderAttr = {};  // md-slider min, max, step
 
 
   toggleSectionInfo() {
@@ -67,13 +63,16 @@ export class SpecimenDetailComponent implements OnInit {
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
         this.isLoaded = true;
+        this.currentSection = this.sliderAttr['max'] / 2;
+        this.setSectionContourLine(this.currentSection);
+        // this.dataService.setActiveSection(this.sliderAttr['max'] / 2);
         console.log('SpecimenDetail data loaded.');
       })
       .subscribe(data => {
         this.sectionData = data;
-        this.sectionMax = Math.max.apply(Math, data.sections.map(o => o.section));
-        this.sectionMin = Math.min.apply(Math, data.sections.map(o => o.section));
-        this.sectionStep = +((this.sectionMax - this.sectionMin) / (data.sections.length - 1)).toFixed(2);
+        this.sliderAttr['max'] = Math.max.apply(Math, data.sections.map(o => o.section));
+        this.sliderAttr['min'] = Math.min.apply(Math, data.sections.map(o => o.section));
+        this.sliderAttr['step'] = +((this.sliderAttr['max'] - this.sliderAttr['min']) / (data.sections.length - 1)).toFixed(2);
       });
 
     x3dom.reload();
@@ -118,30 +117,35 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   toggleZoom() {
-
     const button = document.getElementById('zoom-button');
     if (this.zoomed) {
       button.style.backgroundColor = "#202021";
     } else {
       button.style.backgroundColor = "#c23621";
     }
-
     this.zoomed = !this.zoomed;
-
   }
 
   setSectionContourLine(sectionLevel) {
-
+    const colorMap = {blx: '#ff0000', ptu:'#00ff00', rcp:'#0000ff'};
     let keys_outline = [
-      {key: 'bdy_major_outline', name: 'Root', color: '#00ff00', multiSections: false, visible: true},
-      {key: 'cnl_ref_major_outline', name: 'Canal-Pre', color: '#ff00ff', multiSections: false, visible: true},
-      {key: 'cnl_opp_ref_major_outline', name: '', color: '#ffff00', multiSections: false, visible: true},
-      {key: 'mindist_ref_line', name: 'Thinnest dentin', color: '#00ff00', multiSections: false, visible: true},
-      {key: 'mindist_ref_line', name: 'Thinnest dentin-All', color : '#aa33ee', multiSections: true, visible: false}
+      {key: 'bdy_major_outline', name: 'Root', color: '#00ff00',
+        nested: false, multiSections: false, visible: true},
+      {key: 'cnl_ref_major_outline', name: 'Canal-Pre', color: '#ff00ff',
+        nested: false, multiSections: false, visible: true},
+      {key: 'cnl_opp_ref_major_outline', name: '', color: '#ffff00',
+        nested: false, multiSections: false, visible: true},
+      {key: 'mindist_ref_line', name: 'Thinnest dentin', color: '#00ff00',
+        nested: false, multiSections: false, visible: true},
+      {key: 'mindist_ref_line', name: 'Thinnest dentin-All', color : '#aa33ee',
+        nested: false, multiSections: true, visible: false}
     ];
-
     const nested_outline = [
-      {key : 'cnls_cmp_major_outline', color: '', multiSections: false, visible: true},
+      {key : 'cnls_cmp_major_outline', namePrefix: 'Canal-', color: colorMap, multiSections: false, visible: true},
+      {key : 'mindists_cmp_line', namePrefix: 'Mindist-', color: colorMap, multiSections: false, visible: true},
+      {key : 'mesials_cmp_line', namePrefix: 'Mesial-', color: colorMap, multiSections: false, visible: true},
+      {key : 'distals_cmp_line', namePrefix: 'Distal-', color: colorMap, multiSections: false, visible: true},
+      {key : 'laterals_cmp_line', namePrefix: 'Lateral-', color: colorMap, multiSections: false, visible: true},
     ];
 
     // find nearest section level
@@ -151,44 +155,27 @@ export class SpecimenDetailComponent implements OnInit {
 
     nested_outline.forEach(e => {
       keys_outline = keys_outline.concat(this.flattenOutline(e, section));
-
-      console.log(keys_outline);
     });
 
     keys_outline
       .filter(obj => obj.visible)
       .forEach(obj => {
-        if (!obj.multiSections) {
-          const coordInfo = this.getCoordInfo(obj.color, section[obj.key]);
-          this.coordPoints[obj.key] = coordInfo.coordPoints;
-          this.coordIndex[obj.key]  = coordInfo.coordIndex;
-          this.coordColor[obj.key] = coordInfo.coordColor;
+        if (!obj.nested && !obj.multiSections) {
+          this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key]);
         }
-        /*
         if (obj.nested && !obj.multiSections) {
-          const outlines = section[obj.key];
-          Object.keys(outlines).forEach(k => {
-            const coordInfo = this.getCoordInfo('#aaaa00', outlines[k]);
-            const key = obj.key + '.' + k;
-            this.coordPoints[key] = coordInfo.coordPoints;
-            this.coordIndex[key]  = coordInfo.coordIndex;
-            this.coordColor[key]  = coordInfo.coordColor;
-          });
+          const n = obj.key.indexOf('.');
+          this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key.slice(0,n)][obj.key.slice(n+1)]);
         }
-        */
-        if (obj.multiSections ) {
+        if (!obj.nested && obj.multiSections ) {
           this.sectionData.sections.map(d => {
             if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
-              const coordInfo = this.getCoordInfo(obj.color, d[obj.key]);
               const key = obj.key + '.' + d.section.toString();
-              this.coordPoints[key] = coordInfo.coordPoints;
-              this.coordIndex[key]  = coordInfo.coordIndex;
-              this.coordColor[key] = coordInfo.coordColor;
+              this.coordInfo[key] = this.getCoordInfo(obj.color, d[obj.key]);
             }
           });
         }
       });
-
   }
 
   flattenOutline(outline, section) {
@@ -198,8 +185,9 @@ export class SpecimenDetailComponent implements OnInit {
       const key = outline.key + '.' + k;
       flattened.push({
         key: key,
-        name: 'Canal-' + k,
-        color : '#aa33ee',
+        name: outline.prefix + k,
+        color : outline.color[k],
+        nested: true,
         multiSections: outline.multiSections,
         visible: outline.visible
       });

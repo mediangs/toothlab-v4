@@ -57,9 +57,9 @@
                  vertical="true"
                  [(ngModel)]="currentSection"
                  [disabled] = "!isLoaded"
-                 [max]="sectionMax"
-                 [min]="sectionMin"
-                 [step]="sectionStep"
+                 [max]="sliderAttr['max']"
+                 [min]="sliderAttr['min']"
+                 [step]="sliderAttr['step']"
                  [thumb-label]="true"
                  (input)="setActiveSection(value.value)"
       ></md-slider>
@@ -77,11 +77,11 @@
                   [attr.url]='specimen.path+x3d.name+".x3d"'></Inline>
         </Group>
 
-        <Group *ngFor="let key of coordIndex | keys">
+        <Group *ngFor="let key of coordInfo | keys">
           <shape>
-            <IndexedLineSet [attr.coordIndex]='coordIndex[key]'>
-              <Coordinate [attr.point]='coordPoints[key]'></Coordinate>
-              <Color [attr.color]='coordColor[key]'></Color>
+            <IndexedLineSet [attr.coordIndex]='coordInfo[key].coordIndex'>
+              <Coordinate [attr.point]='coordInfo[key].coordPoints'></Coordinate>
+              <Color [attr.color]='coordInfo[key].coordColor'></Color>
             </IndexedLineSet>
           </shape>
         </Group>
