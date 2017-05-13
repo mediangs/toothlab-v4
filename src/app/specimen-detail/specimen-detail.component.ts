@@ -127,7 +127,7 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   setSectionContourLine(sectionLevel) {
-    const colorMap = {blx: '#ff0000', ptu:'#00ff00', rcp:'#0000ff'};
+    const colorMap = {blx: '#ff0000', ptu: '#00ff00', rcp: '#0000ff'};
     let keys_outline = [
       {key: 'bdy_major_outline', name: 'Root', color: '#00ff00',
         nested: false, multiSections: false, visible: true},
@@ -136,7 +136,7 @@ export class SpecimenDetailComponent implements OnInit {
       {key: 'cnl_opp_ref_major_outline', name: '', color: '#ffff00',
         nested: false, multiSections: false, visible: true},
       {key: 'mindist_ref_line', name: 'Thinnest dentin', color: '#00ff00',
-        nested: false, multiSections: false, visible: true},
+        nested: false, multiSections: true, visible: true},
       {key: 'mindist_ref_line', name: 'Thinnest dentin-All', color : '#aa33ee',
         nested: false, multiSections: true, visible: false}
     ];
