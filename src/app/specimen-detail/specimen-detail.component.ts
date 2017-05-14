@@ -6,6 +6,9 @@ import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
 import {repeatedColor} from '../shared/utils';
 import {DataService} from "../services/data.service";
 import {nestedSectionContours, sectionContours} from "../shared/section-contours";
+import {MdDialog} from "@angular/material";
+import {DialogViewsettingComponent} from "../dialog-viewsetting/dialog-viewsetting.component";
+import {DialogSectionInfoComponent} from "../dialog-section-info/dialog-section-info.component";
 
 declare const x3dom: any;
 declare const d3: any;
@@ -34,11 +37,13 @@ export class SpecimenDetailComponent implements OnInit {
   sectionData: SectionModelSchema; // JSON
   coordInfo = {}; // coordPoints, coordIndex, coordColor
 
-  currentSection = 0;
+  selectedSection = 0;
   sliderAttr = {};  // md-slider min, max, step
 
   _nestedSectionContours;
   _sectionContours;
+
+  selectedOption;
 
 
 
@@ -49,17 +54,36 @@ export class SpecimenDetailComponent implements OnInit {
     this.dataService.setActiveSection(sectionLevel);
   }
 
+  sectionInfoDialog(){
+    let dialogRef = this.dialog.open(DialogSectionInfoComponent, {
+      height: '500px',
+      width: '350px',
+      position: {right:'10px', top:'10px'},
+      data: this.sectionData.sections.find(s => s.section ===this.selectedSection)
+    });
+  }
+
+  viewSettingDialog(){
+    let dialogRef = this.dialog.open(DialogViewsettingComponent, {
+      height: '400px',
+      width: '600px',
+      data: this.sectionData.sections[10].cnl_straightening
+    });
+    dialogRef.afterClosed().subscribe(result => {this.selectedOption = result;});
+  }
+
+
   constructor(private specimenService: SpecimenService,
+              private dataService: DataService,
+              public dialog: MdDialog,
               private route: ActivatedRoute,
               private router: Router,
-              private renderer: Renderer,
-              private dataService: DataService) {
+              private renderer: Renderer) {
 
     dataService.activeSection$.subscribe( section => {
-        this.currentSection = section;
+        this.selectedSection = section;
         this.setSectionContourLine(section);
     });
-
   }
 
   ngOnInit() {
@@ -68,8 +92,8 @@ export class SpecimenDetailComponent implements OnInit {
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
         this.isLoaded = true;
-        this.currentSection = this.sliderAttr['max'] / 2;
-        this.setSectionContourLine(this.currentSection);
+        this.selectedSection = this.sliderAttr['max'] / 2;
+        this.setSectionContourLine(this.selectedSection);
         // this.dataService.setActiveSection(this.sliderAttr['max'] / 2);
         console.log('SpecimenDetail data loaded.');
       })
@@ -77,7 +101,8 @@ export class SpecimenDetailComponent implements OnInit {
         this.sectionData = data;
         this.sliderAttr['max'] = Math.max.apply(Math, data.sections.map(o => o.section));
         this.sliderAttr['min'] = Math.min.apply(Math, data.sections.map(o => o.section));
-        this.sliderAttr['step'] = +((this.sliderAttr['max'] - this.sliderAttr['min']) / (data.sections.length - 1)).toFixed(2);
+        this.sliderAttr['step'] = +((this.sliderAttr['max'] - this.sliderAttr['min'])
+                                    / (data.sections.length - 1)).toFixed(2);
       });
 
     this._nestedSectionContours = nestedSectionContours;
@@ -85,7 +110,7 @@ export class SpecimenDetailComponent implements OnInit {
 
     x3dom.reload();
     /*
-    // color-picker사용을 위해 소문자로 바꾸어야함 ??
+    // color-picker사용을 위해 소문자로 바꾸어야함 ?
     this.specimen.x3dModels.forEach(el => {
       el.color = el.color.toLowerCase();
     });

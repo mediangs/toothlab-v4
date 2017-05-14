@@ -46,7 +46,10 @@
           {{x3d.description}}
         </md-checkbox>
       </li>
-
+      <!-- button md-raised-button (click)="viewSettingDialog()">View setting</button>
+      you chose : {{selectedOption}} -->
+      <br>
+      <button md-raised-button  (click)="sectionInfoDialog()">View Detailed Section Info</button>
       <p></p>
 
     </ul>
@@ -55,7 +58,7 @@
     <div id="section-slider">
       <md-slider #value
                  vertical="true"
-                 [(ngModel)]="currentSection"
+                 [(ngModel)]="selectedSection"
                  [disabled] = "!isLoaded"
                  [max]="sliderAttr['max']"
                  [min]="sliderAttr['min']"
@@ -63,7 +66,7 @@
                  [thumb-label]="true"
                  (input)="setActiveSection(value.value)"
       ></md-slider>
-      {{currentSection | number:'.1'}}mm
+      {{selectedSection | number:'.1'}}mm
     </div>
 
     <scene pickMode="texCoord">
@@ -91,7 +94,7 @@
 
 </div>
 
-<button (click)="toggleSectionInfo()">Section Info</button>
+<!-- button (click)="toggleSectionInfo()">Section Info</button -->
 
 <div *ngIf="!zoomed && displaySectionInfo">
   <app-section-infobox [specimenId]="specimenId"></app-section-infobox>

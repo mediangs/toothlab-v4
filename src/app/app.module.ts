@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
-  MdButtonModule, MdCardModule, MdCheckboxModule, MdProgressBarModule, MdSelectModule, MdSliderModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdProgressBarModule, MdSelectModule, MdSliderModule,
   MdToolbarModule
 } from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -30,9 +30,13 @@ import { KeysPipe } from './keys.pipe';
 import { Routing } from "./app.routes";
 import { SpecimenChartComponent } from './specimen-chart/specimen-chart.component';
 import { SectionInfoboxComponent } from './section-infobox/section-infobox.component';
+import { DialogViewsettingComponent } from './dialog-viewsetting/dialog-viewsetting.component';
+import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section-info.component';
 
 @NgModule({
   declarations: [
+    KeysPipe,
+    nvD3,
     AppComponent,
     HomeComponent,
     AboutComponent,
@@ -41,16 +45,17 @@ import { SectionInfoboxComponent } from './section-infobox/section-infobox.compo
     PublicationsComponent,
     SpecimenListComponent,
     SpecimenDetailComponent,
-    KeysPipe,
-    nvD3,
     SpecimenChartComponent,
     SectionInfoboxComponent,
+    DialogViewsettingComponent,
+    DialogSectionInfoComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpModule,
-    BrowserAnimationsModule,
+    Routing,
     MdToolbarModule,
     MdSliderModule,
     MdButtonModule,
@@ -58,13 +63,17 @@ import { SectionInfoboxComponent } from './section-infobox/section-infobox.compo
     MdCardModule,
     MdSelectModule,
     MdProgressBarModule,
-    Routing
+    MdDialogModule
   ],
   providers: [
     PeopleService,
     PublicationsService,
     SpecimenService,
     DataService
+  ],
+  entryComponents: [
+    DialogViewsettingComponent,
+    DialogSectionInfoComponent
   ],
   schemas: [NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent]

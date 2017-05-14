@@ -23,7 +23,7 @@ export const people: People[] =
 
     },
     {
-        "name" : "Lee Kyeongeon",
+        "name" : "Lee koungeon",
         "role" : "Investor, Prodigy, Professional gamer(Boom beach, Yu-gi-oh card), 1th grade, Samjungja middle school",
         "photo" : "jeongkyu.jpg"
     },
