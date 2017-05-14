@@ -3,6 +3,20 @@
  */
 
 
+export const clone = function(obj) {
+  if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj)
+    return obj;
+
+  let temp = obj.constructor();
+  for (let key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      obj['isActiveClone'] = null;
+      temp[key] = clone(obj[key]);
+      delete obj['isActiveClone'];
+    }
+  }
+  return temp;
+};
 
 const flatten = (ary) => ary.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
 const hexToRgb = function(hex) {
@@ -31,22 +45,16 @@ export const namedlist = function(fields) {
   };
 };
 
-
 // http://stackoverflow.com/questions/3080421/javascript-color-gradient
-
-export const getGradientColor = function(start_color, end_color, percent) {
+export const gradientColor = function(start_color, end_color, percent) {
   // strip the leading # if it's there
   start_color = start_color.replace(/^\s*#|\s*$/g, '');
   end_color = end_color.replace(/^\s*#|\s*$/g, '');
 
   // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
-  if (start_color.length === 3) {
-    start_color = start_color.replace(/(.)/g, '$1$1');
-  }
+  if (start_color.length === 3) { start_color = start_color.replace(/(.)/g, '$1$1');}
 
-  if (end_color.length === 3) {
-    end_color = end_color.replace(/(.)/g, '$1$1');
-  }
+  if (end_color.length === 3) {end_color = end_color.replace(/(.)/g, '$1$1');}
 
   // get colors
   const start_red = parseInt(start_color.substr(0, 2), 16),
@@ -79,20 +87,14 @@ export const getGradientColor = function(start_color, end_color, percent) {
   return '#' + str_diff_red + str_diff_green + str_diff_blue;
 };
 
-
-export const getGradientColorWithRange(
+export const gradientColorWithRange = function (
   startColor: string, endColor: string,
   startValue: number, endValue: number, evaluatingValue: number) {
 
-  if (evaluatingValue < startValue) {
-    return startColor;
+  if (evaluatingValue < startValue) { return startColor;}
+  else if (evaluatingValue > endValue) { return endColor; }
+  else {
+    const percent = (evaluatingValue - startValue) / (endValue - startValue);
+    return gradientColor(startColor, endColor, percent);
   }
-  if (evaluatingValue > endValue) {
-    return endColor;
-  }
-   const percent =
-
-
-}
-
-
+};

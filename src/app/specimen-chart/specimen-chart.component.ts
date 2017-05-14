@@ -25,7 +25,7 @@ export class SpecimenChartComponent implements OnInit {
   ngOnInit() {
 
     this.specimenService
-      .getSectionDataById(this.specimenId)
+      .getSimpleSectionDataById(this.specimenId)
       .finally(() => {
         console.log('SpecimenChart data loaded.');
         this.drawChart(0); })

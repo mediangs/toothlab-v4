@@ -5,6 +5,7 @@ import {Specimen, X3dModel} from '../schemas/specimen-schema';
 import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
 import {repeatedColor} from '../shared/utils';
 import {DataService} from "../services/data.service";
+import {nestedSectionContours, sectionContours} from "../shared/section-contours";
 
 declare const x3dom: any;
 declare const d3: any;
@@ -35,6 +36,10 @@ export class SpecimenDetailComponent implements OnInit {
 
   currentSection = 0;
   sliderAttr = {};  // md-slider min, max, step
+
+  _nestedSectionContours;
+  _sectionContours;
+
 
 
   toggleSectionInfo() {
@@ -74,6 +79,9 @@ export class SpecimenDetailComponent implements OnInit {
         this.sliderAttr['min'] = Math.min.apply(Math, data.sections.map(o => o.section));
         this.sliderAttr['step'] = +((this.sliderAttr['max'] - this.sliderAttr['min']) / (data.sections.length - 1)).toFixed(2);
       });
+
+    this._nestedSectionContours = nestedSectionContours;
+    this._sectionContours = sectionContours;
 
     x3dom.reload();
     /*
@@ -127,47 +135,28 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   setSectionContourLine(sectionLevel) {
-    const colorMap = {blx: '#ff0000', ptu: '#00ff00', rcp: '#0000ff'};
-    let keys_outline = [
-      {key: 'bdy_major_outline', name: 'Root', color: '#00ff00',
-        nested: false, multiSections: false, visible: true},
-      {key: 'cnl_ref_major_outline', name: 'Canal-Pre', color: '#ff00ff',
-        nested: false, multiSections: false, visible: true},
-      {key: 'cnl_opp_ref_major_outline', name: '', color: '#ffff00',
-        nested: false, multiSections: false, visible: true},
-      {key: 'mindist_ref_line', name: 'Thinnest dentin', color: '#00ff00',
-        nested: false, multiSections: true, visible: true},
-      {key: 'mindist_ref_line', name: 'Thinnest dentin-All', color : '#aa33ee',
-        nested: false, multiSections: true, visible: false}
-    ];
-    const nested_outline = [
-      {key : 'cnls_cmp_major_outline', namePrefix: 'Canal-', color: colorMap, multiSections: false, visible: true},
-      {key : 'mindists_cmp_line', namePrefix: 'Mindist-', color: colorMap, multiSections: false, visible: true},
-      {key : 'mesials_cmp_line', namePrefix: 'Mesial-', color: colorMap, multiSections: false, visible: true},
-      {key : 'distals_cmp_line', namePrefix: 'Distal-', color: colorMap, multiSections: false, visible: true},
-      {key : 'laterals_cmp_line', namePrefix: 'Lateral-', color: colorMap, multiSections: false, visible: true},
-    ];
+
 
     // find nearest section level
     const section = this.sectionData.sections
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
-    nested_outline.forEach(e => {
-      keys_outline = keys_outline.concat(this.flattenOutline(e, section));
+    this._nestedSectionContours.forEach(e => {
+      this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
     });
 
-    keys_outline
+    this._sectionContours
       .filter(obj => obj.visible)
       .forEach(obj => {
         if (!obj.nested && !obj.multiSections) {
           this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key]);
         }
-        if (obj.nested && !obj.multiSections) {
+        else if (obj.nested && !obj.multiSections) {
           const n = obj.key.indexOf('.');
           this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key.slice(0,n)][obj.key.slice(n+1)]);
         }
-        if (!obj.nested && obj.multiSections ) {
+        else if (!obj.nested && obj.multiSections ) {
           this.sectionData.sections.map(d => {
             if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
               const key = obj.key + '.' + d.section.toString();
@@ -175,10 +164,19 @@ export class SpecimenDetailComponent implements OnInit {
             }
           });
         }
+        else if (obj.nested && obj.multiSections ) {
+          const n = obj.key.indexOf('.');
+          this.sectionData.sections.map(d => {
+            if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
+              const key = obj.key + '.' + d.section.toString();
+              this.coordInfo[key] = this.getCoordInfo(obj.color, d[obj.key.slice(0,n)][obj.key.slice(n+1)]);
+            }
+          });
+        }
       });
   }
 
-  flattenOutline(outline, section) {
+  flattenNestedOutline(outline, section) {
     const flattened = [];
     const cmps = section[outline.key];
     Object.keys(cmps).forEach( k => {

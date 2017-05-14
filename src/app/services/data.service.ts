@@ -7,6 +7,8 @@ export class DataService {
   // Observable source
   private activeSectionSource = new Subject<number>();
 
+  private sectionContourSource = new Subject();
+
   // Observable stream
   activeSection$ = this.activeSectionSource.asObservable();
 
@@ -14,3 +16,5 @@ export class DataService {
     this.activeSectionSource.next(section);
   }
 }
+
+
