@@ -32,7 +32,8 @@
         <button id="zoom-button" (click)="toggleZoom()">Zoom</button>
       </li>
     </ul>
-    <ul  id="x3d-list">
+
+    <ul *ngIf="!zoomed" id="x3d-list">
       <li *ngFor="let x3d of specimen.x3dModels">
         <md-checkbox
           #value
@@ -106,7 +107,7 @@
 
 
 
-<div>
+<!--div>
   <button (click)="reload()">Reload</button>
   <button (click)="gotoAnatomy()">Back</button>
-</div>
+</div -->
