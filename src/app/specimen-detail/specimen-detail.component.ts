@@ -55,23 +55,28 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   sectionInfoDialog(){
-    let dialogRef = this.dialog.open(DialogSectionInfoComponent, {
+    const dialogRef = this.dialog.open(DialogSectionInfoComponent, {
       height: '500px',
       width: '350px',
       position: {right:'10px', top:'10px'},
-      data: this.sectionData.sections.find(s => s.section ===this.selectedSection)
+      data: this.sectionData.sections.find(s => s.section === this.selectedSection)
     });
   }
 
-  viewSettingDialog(){
-    let dialogRef = this.dialog.open(DialogViewsettingComponent, {
+  viewSettingDialog() {
+    const dialogRef = this.dialog.open(DialogViewsettingComponent, {
       height: '400px',
       width: '600px',
-      data: this.sectionData.sections[10].cnl_straightening
+      data: this._sectionContours
     });
-    dialogRef.afterClosed().subscribe(result => {this.selectedOption = result;});
+    dialogRef.afterClosed()
+      .finally(() => {
+        // this.initSectionContours(this.selectedSection);
+        this.setSectionContourLine(this.selectedSection);
+      })
+      .subscribe(result => {
+        this._sectionContours = result;});
   }
-
 
   constructor(private specimenService: SpecimenService,
               private dataService: DataService,
@@ -82,6 +87,7 @@ export class SpecimenDetailComponent implements OnInit {
 
     dataService.activeSection$.subscribe( section => {
         this.selectedSection = section;
+        this.initSectionContours(this.selectedSection);
         this.setSectionContourLine(section);
     });
   }
@@ -93,6 +99,7 @@ export class SpecimenDetailComponent implements OnInit {
       .finally(() => {
         this.isLoaded = true;
         this.selectedSection = this.sliderAttr['max'] / 2;
+        // this.initSectionContours(this.selectedSection);
         this.setSectionContourLine(this.selectedSection);
         // this.dataService.setActiveSection(this.sliderAttr['max'] / 2);
         console.log('SpecimenDetail data loaded.');
@@ -159,9 +166,7 @@ export class SpecimenDetailComponent implements OnInit {
     this.zoomed = !this.zoomed;
   }
 
-  setSectionContourLine(sectionLevel) {
-
-
+  initSectionContours(sectionLevel) {
     // find nearest section level
     const section = this.sectionData.sections
       .reduce((prev, curr) =>
@@ -170,26 +175,32 @@ export class SpecimenDetailComponent implements OnInit {
     this._nestedSectionContours.forEach(e => {
       this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
     });
+    this._sectionContours.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  setSectionContourLine(sectionLevel) {
+    // find nearest section level
+    const section = this.sectionData.sections
+      .reduce((prev, curr) =>
+        Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
+
 
     this._sectionContours
       .filter(obj => obj.visible)
       .forEach(obj => {
         if (!obj.nested && !obj.multiSections) {
           this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key]);
-        }
-        else if (obj.nested && !obj.multiSections) {
+        } else if (obj.nested && !obj.multiSections) {
           const n = obj.key.indexOf('.');
           this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key.slice(0,n)][obj.key.slice(n+1)]);
-        }
-        else if (!obj.nested && obj.multiSections ) {
+        } else if (!obj.nested && obj.multiSections ) {
           this.sectionData.sections.map(d => {
             if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
               const key = obj.key + '.' + d.section.toString();
               this.coordInfo[key] = this.getCoordInfo(obj.color, d[obj.key]);
             }
           });
-        }
-        else if (obj.nested && obj.multiSections ) {
+        } else if (obj.nested && obj.multiSections ) {
           const n = obj.key.indexOf('.');
           this.sectionData.sections.map(d => {
             if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
@@ -208,7 +219,7 @@ export class SpecimenDetailComponent implements OnInit {
       const key = outline.key + '.' + k;
       flattened.push({
         key: key,
-        name: outline.prefix + k,
+        name: outline.namePrefix + k,
         color : outline.color[k],
         nested: true,
         multiSections: outline.multiSections,

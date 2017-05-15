@@ -1,9 +1,20 @@
-<h1 md-dialog-title>Dialog</h1>
-<div md-dialog-content>What would you like to do?<br>
-  passed data {{passedData | json}}
+<script src="../dialog-section-info/dialog-section-info.component.spec.ts"></script>
+<h1 md-dialog-title>Root outlines setting</h1>
+
+<div md-dialog-content><br>
+  <ul id="options">
+    <li *ngFor = "let contour of data">
+      <md-checkbox
+        #value
+        color="primary"
+        [(ngModel)]="contour.visible"
+      >{{contour.name.slice(contour.name.indexOf('.') + 1)}}</md-checkbox>
+    </li>
+  </ul>
+
 </div>
 <div md-dialog-actions>
-  <button md-button (click)="dialogRef.close('Option 1')">Option 1</button>
+  <button md-button (click)="dialogRef.close(data)">Apply options</button>
   <button md-button (click)="dialogRef.close('Option 2')">Option 2</button>
   <button md-button md-dialog-close>Close</button>
 </div>

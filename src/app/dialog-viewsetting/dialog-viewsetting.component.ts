@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MD_DIALOG_DATA, MdDialogRef} from "@angular/material";
 
 @Component({
@@ -6,10 +6,11 @@ import {MD_DIALOG_DATA, MdDialogRef} from "@angular/material";
   templateUrl: './dialog-viewsetting.component.html',
   styleUrls: ['./dialog-viewsetting.component.css']
 })
-export class DialogViewsettingComponent {
-  passedData;
+export class DialogViewsettingComponent implements OnInit{
   constructor(@Inject(MD_DIALOG_DATA) public data: any,
               public dialogRef: MdDialogRef<DialogViewsettingComponent>) {
-    this.passedData = data;
+  }
+
+  ngOnInit() {
   }
 }
