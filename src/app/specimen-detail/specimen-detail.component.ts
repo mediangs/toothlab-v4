@@ -43,8 +43,6 @@ export class SpecimenDetailComponent implements OnInit {
   _nestedSectionContours;
   _sectionContours;
 
-  selectedOption;
-
 
 
   toggleSectionInfo() {
@@ -65,14 +63,13 @@ export class SpecimenDetailComponent implements OnInit {
 
   viewSettingDialog() {
     const dialogRef = this.dialog.open(DialogViewsettingComponent, {
-      height: '400px',
-      width: '600px',
+      height: '600px',
+      width: '500px',
       data: this._sectionContours
     });
     dialogRef.afterClosed()
       .finally(() => {
-        // this.initSectionContours(this.selectedSection);
-        this.setSectionContourLine(this.selectedSection);
+        this.setActiveSection(this.selectedSection);
       })
       .subscribe(result => {
         this._sectionContours = result;});
@@ -166,16 +163,20 @@ export class SpecimenDetailComponent implements OnInit {
     this.zoomed = !this.zoomed;
   }
 
+  private sectionContoursInitalized = false;
   initSectionContours(sectionLevel) {
     // find nearest section level
-    const section = this.sectionData.sections
-      .reduce((prev, curr) =>
-        Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
+    if (!this.sectionContoursInitalized) {
+      this.sectionContoursInitalized = true;
+      const section = this.sectionData.sections
+        .reduce((prev, curr) =>
+          Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
-    this._nestedSectionContours.forEach(e => {
-      this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
-    });
-    this._sectionContours.sort((a, b) => a.name.localeCompare(b.name));
+      this._nestedSectionContours.forEach(e => {
+        this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
+      });
+      this._sectionContours.sort((a, b) => a.name.localeCompare(b.name));
+    }
   }
 
   setSectionContourLine(sectionLevel) {
@@ -184,7 +185,7 @@ export class SpecimenDetailComponent implements OnInit {
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
-
+    this.coordInfo = {};
     this._sectionContours
       .filter(obj => obj.visible)
       .forEach(obj => {

@@ -5,9 +5,13 @@
   <ul id="options">
     <li *ngFor = "let contour of data">
       <md-checkbox
-        #value
         color="primary"
         [(ngModel)]="contour.visible"
+        ></md-checkbox>
+
+      <md-checkbox
+        color="accent"
+        [(ngModel)]="contour.multiSections"
       >{{contour.name.slice(contour.name.indexOf('.') + 1)}}</md-checkbox>
     </li>
   </ul>
