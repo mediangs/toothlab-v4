@@ -3,6 +3,16 @@
  */
 
 
+export const  duplicateArray = function(content) {
+  let arr = [];
+  content.forEach((x) => {
+    arr.push(Object.assign({}, x));
+  });
+  return arr;
+};
+
+
+
 export const clone = function(obj) {
   if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj)
     return obj;
@@ -91,7 +101,7 @@ export const gradientColorWithRange = function (
   startColor: string, endColor: string,
   startValue: number, endValue: number, evaluatingValue: number) {
 
-  if (evaluatingValue < startValue) { return startColor;}
+  if (evaluatingValue < startValue) { return startColor; }
   else if (evaluatingValue > endValue) { return endColor; }
   else {
     const percent = (evaluatingValue - startValue) / (endValue - startValue);

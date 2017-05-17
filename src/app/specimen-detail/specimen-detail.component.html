@@ -8,11 +8,11 @@
       <md-card-title>{{specimen.id}}</md-card-title>
     </md-card-header>
     <md-card-content>
-      <div *ngIf="isLoaded">
+      <div *ngIf="isSectionDataLoaded">
         {{specimen.location}}<br>
         {{specimen.description}}<br>
       </div>
-      <div *ngIf="!isLoaded">
+      <div *ngIf="!isSectionDataLoaded">
         <h3>Loading tooth data...</h3>
         <md-progress-bar
           color="primary"
@@ -47,9 +47,21 @@
           {{x3d.description}}
         </md-checkbox>
       </li>
-      <button md-raised-button (click)="viewSettingDialog()">View setting</button>
-      <br>
-      <button md-raised-button  (click)="sectionInfoDialog()">View Detailed Section Info</button>
+      <li>
+      <button md-raised-button
+              [disabled] = "!isSectionDataLoaded"
+              (click)="viewConfigDialog()">
+        Configure display mode
+      </button>
+      </li>
+
+      <li>
+      <button md-raised-button
+              [disabled] = "!isSectionDataLoaded"
+              (click)="sectionInfoDialog()">
+        View Detailed Section Info
+      </button>
+      </li>
       <p></p>
 
     </ul>
@@ -59,12 +71,12 @@
       <md-slider #value
                  vertical="true"
                  [(ngModel)]="selectedSection"
-                 [disabled] = "!isLoaded"
+                 [disabled] = "!isSectionDataLoaded"
                  [max]="sliderAttr['max']"
                  [min]="sliderAttr['min']"
                  [step]="sliderAttr['step']"
                  [thumb-label]="true"
-                 (input)="setActiveSection(value.value)"
+                 (input)="setSelectedSection(value.value)"
       ></md-slider>
       {{selectedSection | number:'.1'}}mm
     </div>

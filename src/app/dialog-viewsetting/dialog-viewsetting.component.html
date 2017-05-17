@@ -1,24 +1,27 @@
 <script src="../dialog-section-info/dialog-section-info.component.spec.ts"></script>
-<h1 md-dialog-title>Root outlines setting</h1>
+<h1 md-dialog-title>Configure display mode</h1>
 
 <div md-dialog-content><br>
+  <i class="material-icons" style="color:blue;vertical-align: middle;">check_box</i> Visibility
+  <i class="material-icons" style="color:red;vertical-align: middle;">check_box</i> View entire sections
   <ul id="options">
     <li *ngFor = "let contour of data">
       <md-checkbox
         color="primary"
-        [(ngModel)]="contour.visible"
-        ></md-checkbox>
+        [(ngModel)]="contour.visible">
+      </md-checkbox>
 
       <md-checkbox
         color="accent"
-        [(ngModel)]="contour.multiSections"
-      >{{contour.name.slice(contour.name.indexOf('.') + 1)}}</md-checkbox>
+        [(ngModel)]="contour.multiSections">
+        <i class="material-icons" [style.color]="contour.color" style="vertical-align: middle;">label</i>
+        {{contour.name.slice(contour.name.indexOf('.') + 1)}}
+      </md-checkbox>
     </li>
   </ul>
 
 </div>
 <div md-dialog-actions>
   <button md-button (click)="dialogRef.close(data)">Apply options</button>
-  <button md-button (click)="dialogRef.close('Option 2')">Option 2</button>
-  <button md-button md-dialog-close>Close</button>
+  <button md-button (click)="dialogRef.close(previousData)">Cancel</button>
 </div>

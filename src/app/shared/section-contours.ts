@@ -12,11 +12,11 @@ export let sectionContours = [
   {key: 'cnl_opp_ref_major_outline', name: '11.Canal-pre-opposite', color: '#ffff00',
     nested: false, multiSections: false, visible: true},
   {key: 'mindist_ref_line', name: '21.Thinnest dentin-pre', color: '#00ff00',
-    nested: false, multiSections: true, visible: true},
+    nested: false, multiSections: false, visible: false},
   {key: 'mesial_ref_line', name: '31.Mesial dentin-pre', color: '#00ff00',
-    nested: false, multiSections: true, visible: true},
+    nested: false, multiSections: false, visible: false},
   {key: 'distal_ref_line', name: '41.Distal dentin-pre', color: '#00ff00',
-    nested: false, multiSections: true, visible: true},
+    nested: false, multiSections: false, visible: false},
   // {key: 'mindist_ref_line', name: 'Thinnest dentin-All', color : '#aa33ee',
   //  nested: false, multiSections: true, visible: false}
 ];

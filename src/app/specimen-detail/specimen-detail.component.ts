@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SpecimenService} from '../services/specimen.service';
 import {Specimen, X3dModel} from '../schemas/specimen-schema';
 import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
-import {repeatedColor} from '../shared/utils';
+import {duplicateArray, gradientColorWithRange, repeatedColor} from '../shared/utils';
 import {DataService} from "../services/data.service";
 import {nestedSectionContours, sectionContours} from "../shared/section-contours";
 import {MdDialog} from "@angular/material";
@@ -27,8 +27,7 @@ export class SpecimenDetailComponent implements OnInit {
   private specimen: Specimen;
   private specimenId: string;
 
-  private isLoaded = false;
-  displaySectionInfo = false;
+  private isSectionDataLoaded = false;
 
   color = '#0ff';
   modelWidth = 100;
@@ -40,39 +39,42 @@ export class SpecimenDetailComponent implements OnInit {
   selectedSection = 0;
   sliderAttr = {};  // md-slider min, max, step
 
+  private sectionContoursInitalized = false;
   _nestedSectionContours;
   _sectionContours;
 
 
 
-  toggleSectionInfo() {
-    this.displaySectionInfo = !this.displaySectionInfo;
-  }
-  setActiveSection(sectionLevel: number) {
-    this.dataService.setActiveSection(sectionLevel);
+  setSelectedSection(sectionLevel: number) {
+    this.selectedSection = sectionLevel;
+    this.dataService.setActiveSection(this.selectedSection);
   }
 
-  sectionInfoDialog(){
+  sectionInfoDialog() {
     const dialogRef = this.dialog.open(DialogSectionInfoComponent, {
       height: '500px',
       width: '350px',
-      position: {right:'10px', top:'10px'},
+      position: {right: '10px', top: '10px'},
       data: this.sectionData.sections.find(s => s.section === this.selectedSection)
     });
   }
 
-  viewSettingDialog() {
+  viewConfigDialog() {
     const dialogRef = this.dialog.open(DialogViewsettingComponent, {
       height: '600px',
       width: '500px',
       data: this._sectionContours
     });
-    dialogRef.afterClosed()
+    dialogRef
+      .afterClosed()
       .finally(() => {
-        this.setActiveSection(this.selectedSection);
+        this.setSelectedSection(this.selectedSection);
       })
       .subscribe(result => {
-        this._sectionContours = result;});
+        if (result) {
+          this._sectionContours = result;
+        }
+      });
   }
 
   constructor(private specimenService: SpecimenService,
@@ -83,9 +85,11 @@ export class SpecimenDetailComponent implements OnInit {
               private renderer: Renderer) {
 
     dataService.activeSection$.subscribe( section => {
-        this.selectedSection = section;
-        this.initSectionContours(this.selectedSection);
-        this.setSectionContourLine(section);
+      this.selectedSection = section;
+      if (!this.sectionContoursInitalized) {
+        this.sectionContoursInitalized = this.initSectionContours(this.selectedSection);
+      }
+      this.setSectionContourLine(section);
     });
   }
 
@@ -94,11 +98,8 @@ export class SpecimenDetailComponent implements OnInit {
     this.specimen = this.specimenService.getSpecimenById(this.specimenId);
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
-        this.isLoaded = true;
-        this.selectedSection = this.sliderAttr['max'] / 2;
-        // this.initSectionContours(this.selectedSection);
-        this.setSectionContourLine(this.selectedSection);
-        // this.dataService.setActiveSection(this.sliderAttr['max'] / 2);
+        this.isSectionDataLoaded = true;
+        this.setSelectedSection(this.sliderAttr['max'] / 2);
         console.log('SpecimenDetail data loaded.');
       })
       .subscribe(data => {
@@ -108,7 +109,6 @@ export class SpecimenDetailComponent implements OnInit {
         this.sliderAttr['step'] = +((this.sliderAttr['max'] - this.sliderAttr['min'])
                                     / (data.sections.length - 1)).toFixed(2);
       });
-
     this._nestedSectionContours = nestedSectionContours;
     this._sectionContours = sectionContours;
 
@@ -163,20 +163,17 @@ export class SpecimenDetailComponent implements OnInit {
     this.zoomed = !this.zoomed;
   }
 
-  private sectionContoursInitalized = false;
   initSectionContours(sectionLevel) {
     // find nearest section level
-    if (!this.sectionContoursInitalized) {
-      this.sectionContoursInitalized = true;
-      const section = this.sectionData.sections
-        .reduce((prev, curr) =>
-          Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
+    const section = this.sectionData.sections
+      .reduce((prev, curr) =>
+        Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
-      this._nestedSectionContours.forEach(e => {
-        this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
-      });
-      this._sectionContours.sort((a, b) => a.name.localeCompare(b.name));
-    }
+    this._nestedSectionContours.forEach(e => {
+      this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
+    });
+    this._sectionContours.sort((a, b) => a.name.localeCompare(b.name));
+    return true;
   }
 
   setSectionContourLine(sectionLevel) {
@@ -206,11 +203,22 @@ export class SpecimenDetailComponent implements OnInit {
           this.sectionData.sections.map(d => {
             if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
               const key = obj.key + '.' + d.section.toString();
-              this.coordInfo[key] = this.getCoordInfo(obj.color, d[obj.key.slice(0,n)][obj.key.slice(n+1)]);
+              const coord = d[obj.key.slice(0, n)][obj.key.slice(n + 1)];
+              if (coord.length === 2) {
+                this.coordInfo[key] = this.getCoordInfo(
+                  gradientColorWithRange('#f00', '#00f', 0.5, 1, this.lineLength(duplicateArray(coord))), coord);
+              } else {
+                this.coordInfo[key] = this.getCoordInfo(obj.color, coord);
+              }
             }
           });
         }
       });
+  }
+
+  lineLength(arr) {
+    const a = arr[0], b = arr[1];
+    return Math.sqrt((a[0] -= b[0]) * a[0] + (a[1] -= b[1]) * a[1] + (a[2] -= b[2]) * a[2]);
   }
 
   flattenNestedOutline(outline, section) {
