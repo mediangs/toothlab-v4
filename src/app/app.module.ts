@@ -12,6 +12,11 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {nvD3} from 'ng2-nvd3';
 import 'hammerjs';
 
+import {ColorPickerService} from 'angular2-color-picker';
+import {ColorPickerDirective} from 'angular2-color-picker';
+import {ColorPickerModule} from 'angular2-color-picker';
+
+
 import { AppComponent } from './app.component';
 import { HomeComponent} from "./home/home.component";
 import { AboutComponent} from "./about/about.component";
@@ -63,13 +68,16 @@ import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section
     MdCardModule,
     MdSelectModule,
     MdProgressBarModule,
-    MdDialogModule
+    MdDialogModule,
+    ColorPickerModule
   ],
   providers: [
     PeopleService,
     PublicationsService,
     SpecimenService,
-    DataService
+    DataService,
+    ColorPickerService
+
   ],
   entryComponents: [
     DialogViewsettingComponent,

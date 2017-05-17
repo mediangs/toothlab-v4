@@ -35,6 +35,18 @@
 
     <ul *ngIf="!zoomed" id="x3d-list">
       <li *ngFor="let x3d of specimen.x3dModels">
+        <!-- i class="material-icons"
+           style="vertical-align: middle;"
+           [style.color]="x3d.color"
+           [(colorPicker)]="x3d.color"
+           (change)="updateModelColor(x3d)"
+           [cpOutputFormat]="hex"
+           [cpPosition]="'right'"
+           [cpWidth]="'200px'"
+        >label</i -->
+
+
+
         <md-checkbox
           #value
           class="items"
@@ -81,10 +93,15 @@
       {{selectedSection | number:'.1'}}mm
     </div>
 
-    <scene pickMode="texCoord">
-      <Viewpoint position="24.58412 2.30883 0.28578"
+    <scene pickMode="texCoord">d
+      <Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
+                 zNear="0.24115" zFar="100.00000" description=""></Viewpoint>
+      <!-- Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
+                 zNear="9.24115" zFar="100.00000" description=""></Viewpoint-->
+
+      <!-- Viewpoint position="24.58412 2.30883 0.28578"
                  orientation="-0.61420 0.54921 -0.56668 2.04426"
-                 zNear="0" zFar="100" description=""></Viewpoint>
+                 zNear="0" zFar="100" description=""></Viewpoint -->
 
       <Transform translation="-4 -6 -8">
         <Group *ngFor="let x3d of specimen.x3dModels">

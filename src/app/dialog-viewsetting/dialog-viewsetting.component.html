@@ -6,6 +6,17 @@
   <i class="material-icons" style="color:red;vertical-align: middle;">check_box</i> View entire sections
   <ul id="options">
     <li *ngFor = "let contour of data">
+
+      <i class="material-icons"
+         style="vertical-align: middle;"
+         [style.color]="contour.color"
+         [(colorPicker)]="contour.color"
+         [value]="contour.color"
+         [cpOutputFormat]="hex"
+         [cpPosition]="'right'"
+         [cpWidth]="'200px'"
+      >label</i>
+
       <md-checkbox
         color="primary"
         [(ngModel)]="contour.visible">
@@ -14,7 +25,6 @@
       <md-checkbox
         color="accent"
         [(ngModel)]="contour.multiSections">
-        <i class="material-icons" [style.color]="contour.color" style="vertical-align: middle;">label</i>
         {{contour.name.slice(contour.name.indexOf('.') + 1)}}
       </md-checkbox>
     </li>
