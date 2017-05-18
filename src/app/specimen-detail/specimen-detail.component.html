@@ -5,7 +5,7 @@
 
   <md-card id="title" *ngIf="!zoomed">
     <md-card-header>
-      <md-card-title>{{specimen.id}}</md-card-title>
+      <md-card-title>{{specimen.title}}</md-card-title>
     </md-card-header>
     <md-card-content>
       <div *ngIf="isSectionDataLoaded">
@@ -48,11 +48,9 @@
 
 
         <md-checkbox
-          #value
           class="items"
           color="primary"
-          [checked]="x3d.transparency < 1"
-          (change)="toggleModel(x3d, value.checked)">
+          [(ngModel)]="x3d.visible">
           <i class="material-icons"
              style="vertical-align: middle;"
              [style.color]="x3d.color">label</i>
@@ -105,7 +103,8 @@
 
       <Transform translation="-4 -6 -8">
         <Group *ngFor="let x3d of specimen.x3dModels">
-          <Inline [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
+
+          <Inline *ngIf = "x3d.visible" [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
                   [attr.url]='specimen.path+x3d.name+".x3d"'></Inline>
         </Group>
 

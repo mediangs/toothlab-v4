@@ -108,7 +108,7 @@ export class SpecimenDetailComponent implements OnInit {
         this.sliderAttr['min'] = Math.min.apply(Math, data.sections.map(o => o.section));
         this.sliderAttr['step'] = +((this.sliderAttr['max'] - this.sliderAttr['min'])
                                     / (data.sections.length - 1)).toFixed(2);
-        this.sliderAttr['max'] -=this.sliderAttr['step'];
+        this.sliderAttr['max'] -= this.sliderAttr['step'];
       });
     this._nestedSectionContours = nestedSectionContours;
     this._sectionContours = sectionContours;
