@@ -2,8 +2,7 @@
 
 
 <div id="main">
-
-  <md-card id="title" *ngIf="!zoomed">
+  <md-card *ngIf="!zoomed" id="title">
     <md-card-header>
       <md-card-title>{{specimen.title}}</md-card-title>
     </md-card-header>
@@ -13,13 +12,11 @@
         {{specimen.description}}<br>
       </div>
       <div *ngIf="!isSectionDataLoaded">
-        <h3>Loading tooth data...</h3>
+        <h3>Loading data...</h3>
         <md-progress-bar
           color="primary"
           mode="indeterminate">
         </md-progress-bar>
-
-
       </div>
     </md-card-content>
   </md-card>
@@ -45,8 +42,6 @@
            [cpWidth]="'200px'"
         >label</i -->
 
-
-
         <md-checkbox
           class="items"
           color="primary"
@@ -58,22 +53,20 @@
         </md-checkbox>
       </li>
       <li>
-      <button md-raised-button
-              [disabled] = "!isSectionDataLoaded"
-              (click)="viewConfigDialog()">
-        Configure display mode
-      </button>
+        <button md-raised-button
+                [disabled] = "!isSectionDataLoaded"
+                (click)="viewConfigDialog()">
+          Configure display mode
+        </button>
       </li>
 
       <li>
-      <button md-raised-button
-              [disabled] = "!isSectionDataLoaded"
-              (click)="sectionInfoDialog()">
-        View Detailed Section Info
-      </button>
+        <button md-raised-button
+                [disabled] = "!isSectionDataLoaded"
+                (click)="sectionInfoDialog()">
+          View Detailed Section Info
+        </button>
       </li>
-      <p></p>
-
     </ul>
 
 
@@ -103,11 +96,9 @@
 
       <Transform translation="-4 -6 -8">
         <Group *ngFor="let x3d of specimen.x3dModels">
-
           <Inline *ngIf = "x3d.visible" [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
                   [attr.url]='specimen.path+x3d.name+".x3d"'></Inline>
         </Group>
-
         <Group *ngFor="let key of coordInfo | keys">
           <shape>
             <IndexedLineSet [attr.coordIndex]='coordInfo[key].coordIndex'>
@@ -119,19 +110,11 @@
       </Transform>
     </scene>
   </x3d>
-
-</div>
-
-<!-- button (click)="toggleSectionInfo()">Section Info</button -->
-
-<div *ngIf="!zoomed && displaySectionInfo">
-  <app-section-infobox [specimenId]="specimenId"></app-section-infobox>
 </div>
 
 <div *ngIf="!zoomed">
   <app-specimen-chart [specimenId]="specimenId"></app-specimen-chart>
 </div>
-
 
 
 <!--div>

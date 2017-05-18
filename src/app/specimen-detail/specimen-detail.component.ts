@@ -43,8 +43,6 @@ export class SpecimenDetailComponent implements OnInit {
   _nestedSectionContours;
   _sectionContours;
 
-
-
   setSelectedSection(sectionLevel: number) {
     this.selectedSection = sectionLevel;
     this.dataService.setActiveSection(this.selectedSection);
