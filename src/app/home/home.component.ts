@@ -9,6 +9,7 @@ declare var x3dom: any;
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  // private tooth_model = require('./images/3d_model.png');
   items = [];
 
   constructor(private zone: NgZone) { }
