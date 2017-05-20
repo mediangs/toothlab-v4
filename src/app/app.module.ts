@@ -13,7 +13,6 @@ import {nvD3} from 'ng2-nvd3';
 import 'hammerjs';
 
 import {ColorPickerService} from 'angular2-color-picker';
-import {ColorPickerDirective} from 'angular2-color-picker';
 import {ColorPickerModule} from 'angular2-color-picker';
 
 
@@ -69,7 +68,7 @@ import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section
     MdSelectModule,
     MdProgressBarModule,
     MdDialogModule,
-    ColorPickerModule
+    ColorPickerModule,
   ],
   providers: [
     PeopleService,

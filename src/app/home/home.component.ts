@@ -9,36 +9,19 @@ declare var x3dom: any;
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  // private tooth_model = require('./images/3d_model.png');
-  items = [];
+
+  carouselImages = [];
 
   constructor(private zone: NgZone) { }
 
   ngOnInit() {
-    this.items.push({
-      translation: '0 0 0',
-      diffuseColor: '1 0 0',
-      type: 'box'
-    });
-    x3dom.reload();
+    this.carouselImages.push("../../assets/images/3d_model.png");
+    this.carouselImages.push("../../assets/images/section.png");
+    this.carouselImages.push("../../assets/images/3d_model_with_section.png");
+    this.carouselImages.push("../../assets/images/thinnest_dentin.png");
+    this.carouselImages.push("../../assets/images/dentin_thickness_chart.png");
   }
 
-  clicked() {
-    if (this.items.length == 1) {
-      this.items.push({
-        translation: '3 0 0',
-        diffuseColor: '0 1 0',
-        type: 'cone'
-      })
-    }
-    else if (this.items.length == 2) {
-      this.items.push({
-        translation: '-3 0 0',
-        diffuseColor: '0 0 1',
-        type: 'sphere'
-      })
-    }
-  }
 
 
 }
