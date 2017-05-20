@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
     "angular2-color-picker": "git+https://github.com/francescotimperi/angular2-color-picker.git",
+    "angulartics2": "^2.2.1",
     "core-js": "^2.4.1",
     "d3": "^3.5.17",
     "hammerjs": "^2.0.8",

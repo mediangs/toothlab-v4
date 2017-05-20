@@ -14,7 +14,7 @@ import 'hammerjs';
 
 import {ColorPickerService} from 'angular2-color-picker';
 import {ColorPickerModule} from 'angular2-color-picker';
-
+import {Angulartics2GoogleAnalytics, Angulartics2Module} from "angulartics2";
 
 import { AppComponent } from './app.component';
 import { HomeComponent} from "./home/home.component";
@@ -69,6 +69,7 @@ import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section
     MdProgressBarModule,
     MdDialogModule,
     ColorPickerModule,
+    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
   ],
   providers: [
     PeopleService,
