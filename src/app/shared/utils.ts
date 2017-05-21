@@ -11,6 +11,14 @@ export const  duplicateArray = function(content) {
   return arr;
 };
 
+export const lineLength = function(arr) {
+  const a = arr[0], b = arr[1];
+  return Math.sqrt((a[0] -= b[0]) * a[0] + (a[1] -= b[1]) * a[1] + (a[2] -= b[2]) * a[2]);
+};
+
+export const nearest = function(arr:Array<number>, target) {
+  return arr.reduce((prev, curr) => Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev);
+};
 
 
 export const clone = function(obj) {

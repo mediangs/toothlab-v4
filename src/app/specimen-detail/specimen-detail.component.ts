@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SpecimenService} from '../services/specimen.service';
 import {Specimen, X3dModel} from '../schemas/specimen-schema';
 import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
-import {duplicateArray, gradientColorWithRange, repeatedColor} from '../shared/utils';
+import {duplicateArray, gradientColorWithRange, lineLength, nearest, repeatedColor} from '../shared/utils';
 import {DataService} from "../services/data.service";
 import {nestedSectionContours, sectionContours} from "../shared/section-contours";
 import {MdDialog} from "@angular/material";
@@ -97,7 +97,7 @@ export class SpecimenDetailComponent implements OnInit {
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
         this.isSectionDataLoaded = true;
-        this.setSelectedSection(this.sliderAttr['max'] / 2);
+        this.setSelectedSection(nearest(this.sectionData.sections.map(s => s.section), this.sliderAttr['max'] / 2));
         console.log('SpecimenDetail data loaded.');
       })
       .subscribe(data => {
@@ -205,7 +205,7 @@ export class SpecimenDetailComponent implements OnInit {
               const coord = d[obj.key.slice(0, n)][obj.key.slice(n + 1)];
               if (coord.length === 2) {
                 this.coordInfo[key] = this.getCoordInfo(
-                  gradientColorWithRange('#f00', '#00f', 0.5, 1, this.lineLength(duplicateArray(coord))), coord);
+                  gradientColorWithRange('#f00', '#00f', 0.5, 1, lineLength(duplicateArray(coord))), coord);
               } else {
                 this.coordInfo[key] = this.getCoordInfo(obj.color, coord);
               }
@@ -215,10 +215,7 @@ export class SpecimenDetailComponent implements OnInit {
       });
   }
 
-  lineLength(arr) {
-    const a = arr[0], b = arr[1];
-    return Math.sqrt((a[0] -= b[0]) * a[0] + (a[1] -= b[1]) * a[1] + (a[2] -= b[2]) * a[2]);
-  }
+
 
   flattenNestedOutline(outline, section) {
     const flattened = [];

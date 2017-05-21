@@ -13,10 +13,11 @@
       </div>
       <div *ngIf="!isSectionDataLoaded">
         <h3>Loading data...</h3>
-        <md-progress-bar
+
+        <md-progress-spinner
           color="primary"
           mode="indeterminate">
-        </md-progress-bar>
+        </md-progress-spinner>
       </div>
     </md-card-content>
   </md-card>

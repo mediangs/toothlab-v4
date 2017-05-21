@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
-  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdProgressBarModule, MdSelectModule, MdSliderModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdProgressBarModule, MdProgressSpinnerModule,
+  MdSelectModule, MdSliderModule,
   MdToolbarModule
 } from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -67,6 +68,7 @@ import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section
     MdCardModule,
     MdSelectModule,
     MdProgressBarModule,
+    MdProgressSpinnerModule,
     MdDialogModule,
     ColorPickerModule,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
