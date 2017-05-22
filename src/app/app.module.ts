@@ -37,6 +37,7 @@ import { SpecimenChartComponent } from './specimen-chart/specimen-chart.componen
 import { SectionInfoboxComponent } from './section-infobox/section-infobox.component';
 import { DialogViewsettingComponent } from './dialog-viewsetting/dialog-viewsetting.component';
 import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section-info.component';
+import {SectionContourService} from "./services/section-contour.service";
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section
     PublicationsService,
     SpecimenService,
     DataService,
+    SectionContourService,
     ColorPickerService
 
   ],

@@ -9,10 +9,9 @@ import {nestedSectionContours, sectionContours} from "../shared/section-contours
 import {MdDialog} from "@angular/material";
 import {DialogViewsettingComponent} from "../dialog-viewsetting/dialog-viewsetting.component";
 import {DialogSectionInfoComponent} from "../dialog-section-info/dialog-section-info.component";
+import {SectionContourService} from "../services/section-contour.service";
 
 declare const x3dom: any;
-declare const d3: any;
-
 
 @Component({
   selector: 'app-specimen-detail',
@@ -39,9 +38,7 @@ export class SpecimenDetailComponent implements OnInit {
   selectedSection = 0;
   sliderAttr = {};  // md-slider min, max, step
 
-  private sectionContoursInitalized = false;
-  _nestedSectionContours;
-  _sectionContours;
+  private sectionContours;
 
   setSelectedSection(sectionLevel: number) {
     this.selectedSection = sectionLevel;
@@ -61,7 +58,7 @@ export class SpecimenDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogViewsettingComponent, {
       height: '600px',
       width: '600px',
-      data: this._sectionContours
+      data: this.sectionContours
     });
     dialogRef
       .afterClosed()
@@ -70,13 +67,14 @@ export class SpecimenDetailComponent implements OnInit {
       })
       .subscribe(result => {
         if (result) {
-          this._sectionContours = result;
+          this.sectionContours = result;
         }
       });
   }
 
   constructor(private specimenService: SpecimenService,
               private dataService: DataService,
+              private sectionContourService: SectionContourService,
               public dialog: MdDialog,
               private route: ActivatedRoute,
               private router: Router,
@@ -84,8 +82,9 @@ export class SpecimenDetailComponent implements OnInit {
 
     dataService.activeSection$.subscribe( section => {
       this.selectedSection = section;
-      if (!this.sectionContoursInitalized) {
-        this.sectionContoursInitalized = this.initSectionContours(this.selectedSection);
+      if (!this.sectionContours) {
+        this.sectionContours = this.sectionContourService.getSectionContours(this.sectionData.sections[0]);
+        console.log(JSON.stringify(this.sectionContours));
       }
       this.setSectionContourLine(section);
     });
@@ -108,8 +107,6 @@ export class SpecimenDetailComponent implements OnInit {
                                     / (data.sections.length - 1)).toFixed(2);
         this.sliderAttr['max'] -= this.sliderAttr['step'];
       });
-    this._nestedSectionContours = nestedSectionContours;
-    this._sectionContours = sectionContours;
 
     x3dom.reload();
     /*
@@ -162,19 +159,6 @@ export class SpecimenDetailComponent implements OnInit {
     this.zoomed = !this.zoomed;
   }
 
-  initSectionContours(sectionLevel) {
-    // find nearest section level
-    const section = this.sectionData.sections
-      .reduce((prev, curr) =>
-        Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
-
-    this._nestedSectionContours.forEach(e => {
-      this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
-    });
-    this._sectionContours.sort((a, b) => a.name.localeCompare(b.name));
-    return true;
-  }
-
   setSectionContourLine(sectionLevel) {
     // find nearest section level
     const section = this.sectionData.sections
@@ -182,7 +166,7 @@ export class SpecimenDetailComponent implements OnInit {
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
 
     this.coordInfo = {};
-    this._sectionContours
+    this.sectionContours
       .filter(obj => obj.visible)
       .forEach(obj => {
         if (!obj.nested && !obj.multiSections) {
@@ -215,31 +199,13 @@ export class SpecimenDetailComponent implements OnInit {
       });
   }
 
-
-
-  flattenNestedOutline(outline, section) {
-    const flattened = [];
-    const cmps = section[outline.key];
-    Object.keys(cmps).forEach( k => {
-      const key = outline.key + '.' + k;
-      flattened.push({
-        key: key,
-        name: outline.namePrefix + k,
-        color : outline.color[k],
-        nested: true,
-        multiSections: outline.multiSections,
-        visible: outline.visible
-      });
-    });
-    return flattened;
-  }
-
   getCoordInfo(elementColor: string, outline) {
     const coordPoints = [].concat.apply([], outline);
     const coordIndex  = Object.keys(outline).map(x => Number(x)).concat(0);
     const coordColor = repeatedColor(elementColor, coordPoints.length / 3);
     return {coordPoints : coordPoints, coordIndex : coordIndex, coordColor : coordColor};
   }
+
 
   gotoAnatomy() {
     this.router.navigate(['/specimen-list']);

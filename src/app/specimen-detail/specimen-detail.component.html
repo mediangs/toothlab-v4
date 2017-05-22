@@ -68,6 +68,15 @@
           View Detailed Section Info
         </button>
       </li>
+      <li>
+        <button md-raised-button
+                [disabled] = "!isSectionDataLoaded"
+                (click)="this.sectionContourService.getSectionContoursWithMultisections('mindists_cmp_line.blx')">
+          Preset 1
+        </button>
+      </li>
+
+
     </ul>
 
 
