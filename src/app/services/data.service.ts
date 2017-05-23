@@ -11,8 +11,6 @@ export class DataService {
   setActiveSection(section: number) {
     this.activeSectionSource.next(section);
   }
-
-
 }
 
 

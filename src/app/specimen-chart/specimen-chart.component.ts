@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {chartDefinitions} from "../shared/chart-definitions";
 import {SpecimenService} from "../services/specimen.service";
 import {DataService} from "../services/data.service";
+import {ChartService} from "../services/chart.service";
 
 @Component({
   selector: 'app-specimen-chart',
@@ -18,8 +19,12 @@ export class SpecimenChartComponent implements OnInit {
   private chartDefinitions;
 
   constructor(private specimenService: SpecimenService,
+              private chartService: ChartService,
               private dataService: DataService) {
     this.chartDefinitions = chartDefinitions;
+    chartService.activeChart$.subscribe(id => {
+      this.setChartDataAndOptions(id);
+    });
   }
 
   ngOnInit() {
@@ -28,18 +33,18 @@ export class SpecimenChartComponent implements OnInit {
       .getSimpleSectionDataById(this.specimenId)
       .finally(() => {
         console.log('SpecimenChart data loaded.');
-        this.drawChart(0); })
+        this.chartService.setActiveChart(0); })
       .subscribe(data => this.sectionData = data );
   }
 
-  drawChart(chartId) {
+  private setChartDataAndOptions(chartId) {
     const v = chartDefinitions.find(data => data.id === chartId);
     this.chartTitle = v.title;
     this.chartData = this.setChartData(v.data.ref, v.data.cmps, v.data.subElement, v.data.limit);
     this.chartOptions = this.setChartOptions(v.options.xLabel, v.options.yLabel, v.options.yMax);
   }
 
-  setChartData(ref, cmps, subElement = null, limit ) {
+  private setChartData(ref, cmps, subElement = null, limit ) {
     const retData = [];
     if (ref) {
       retData.push({
@@ -65,7 +70,7 @@ export class SpecimenChartComponent implements OnInit {
     return retData;
   }
 
-  setChartOptions(xLabel, yLabel, yMax= null) {
+  private setChartOptions(xLabel, yLabel, yMax= null) {
     return {
       chart: {
         type: 'lineChart',

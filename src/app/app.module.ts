@@ -38,6 +38,7 @@ import { SectionInfoboxComponent } from './section-infobox/section-infobox.compo
 import { DialogViewsettingComponent } from './dialog-viewsetting/dialog-viewsetting.component';
 import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section-info.component';
 import {SectionContourService} from "./services/section-contour.service";
+import {ChartService} from "./services/chart.service";
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import {SectionContourService} from "./services/section-contour.service";
     PublicationsService,
     SpecimenService,
     DataService,
+    ChartService,
     SectionContourService,
     ColorPickerService
 

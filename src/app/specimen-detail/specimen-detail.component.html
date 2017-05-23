@@ -71,12 +71,34 @@
       <li>
         <button md-raised-button
                 [disabled] = "!isSectionDataLoaded"
-                (click)="this.sectionContourService.getSectionContoursWithMultisections('mindists_cmp_line.blx')">
-          Preset 1
+                (click)="this.sectionContourService.setSectionContoursWithMultisections('')">
+          Default View
         </button>
       </li>
 
+      <li>
+        <button md-raised-button
+                [disabled] = "!isSectionDataLoaded"
+                (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.blx')">
+          Thinnest dentin View
+        </button>
+      </li>
 
+      <li>
+        <button md-raised-button
+                [disabled] = "!isSectionDataLoaded"
+                (click)="this.sectionContourService.setSectionContoursWithMultisections('mesials_cmp_line.blx')">
+          Mesial dentin View
+        </button>
+      </li>
+
+      <li>
+        <button md-raised-button
+                [disabled] = "!isSectionDataLoaded"
+                (click)="this.sectionContourService.setSectionContoursWithMultisections('distals_cmp_line.blx')">
+          Distal dentin View
+        </button>
+      </li>
     </ul>
 
 

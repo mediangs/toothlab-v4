@@ -1,17 +1,16 @@
 <div align="center">
   <form>
     <md-select
-
       #value
       name="chart"
       color="red"
       placeholder="Select Chart"
-      (change) ="drawChart(value.selected.value.id)">
+      (change) ="chartService.setActiveChart(value.selected.value.id)">
       <md-option *ngFor="let chart of chartDefinitions" [value]="chart"  >
         {{chart.viewValue}}
       </md-option>
     </md-select>
   </form>
 </div>
-  <h3 align="center">{{chartTitle}}</h3>
-  <nvd3 [options]="chartOptions" [data]="chartData"></nvd3>
+<h3 align="center">{{chartTitle}}</h3>
+<nvd3 [options]="chartOptions" [data]="chartData"></nvd3>

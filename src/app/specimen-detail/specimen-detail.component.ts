@@ -10,6 +10,8 @@ import {MdDialog} from "@angular/material";
 import {DialogViewsettingComponent} from "../dialog-viewsetting/dialog-viewsetting.component";
 import {DialogSectionInfoComponent} from "../dialog-section-info/dialog-section-info.component";
 import {SectionContourService} from "../services/section-contour.service";
+import {chartDefinitions} from "../shared/chart-definitions";
+import {ChartService} from "../services/chart.service";
 
 declare const x3dom: any;
 
@@ -50,7 +52,8 @@ export class SpecimenDetailComponent implements OnInit {
       height: '500px',
       width: '350px',
       position: {right: '10px', top: '10px'},
-      data: this.sectionData.sections.find(s => s.section === this.selectedSection)
+      data: this.sectionData.sections
+        .find(s => s.section === nearest(this.sectionData.sections.map(s => s.section), this.selectedSection))
     });
   }
 
@@ -74,19 +77,35 @@ export class SpecimenDetailComponent implements OnInit {
 
   constructor(private specimenService: SpecimenService,
               private dataService: DataService,
+              private chartService: ChartService,
               private sectionContourService: SectionContourService,
               public dialog: MdDialog,
               private route: ActivatedRoute,
               private router: Router,
               private renderer: Renderer) {
 
+
     dataService.activeSection$.subscribe( section => {
       this.selectedSection = section;
       if (!this.sectionContours) {
         this.sectionContours = this.sectionContourService.getSectionContours(this.sectionData.sections[0]);
-        console.log(JSON.stringify(this.sectionContours));
       }
       this.setSectionContourLine(section);
+    });
+
+    sectionContourService.sectionContours$.subscribe(sectionContours => {
+      this.sectionContours = sectionContours;
+      sectionContours
+        .filter(e=> e.visible && e.multiSections)
+        .forEach(e => {
+          chartDefinitions.forEach(cd =>{
+            if (e.key.includes(cd.data['ref']) ||e.key.includes(cd.data['cmps'])) {
+              this.chartService.setActiveChart(cd.id);
+            }
+          });
+        });
+      this.setSectionContourLine(this.selectedSection);
+
     });
   }
 
