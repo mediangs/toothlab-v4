@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
-  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdProgressBarModule, MdProgressSpinnerModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdMenuModule,
+  MdProgressSpinnerModule,
   MdSelectModule, MdSliderModule,
   MdToolbarModule
 } from "@angular/material";
@@ -39,6 +40,7 @@ import { DialogViewsettingComponent } from './dialog-viewsetting/dialog-viewsett
 import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section-info.component';
 import {SectionContourService} from "./services/section-contour.service";
 import {ChartService} from "./services/chart.service";
+import { ViewConfigComponent } from './view-config/view-config.component';
 
 @NgModule({
   declarations: [
@@ -46,8 +48,8 @@ import {ChartService} from "./services/chart.service";
     nvD3,
     AppComponent,
     HomeComponent,
-    AboutComponent,
-    MaterialComponent,
+    // AboutComponent,
+    // MaterialComponent,
     PeopleComponent,
     PublicationsComponent,
     SpecimenListComponent,
@@ -56,6 +58,7 @@ import {ChartService} from "./services/chart.service";
     SectionInfoboxComponent,
     DialogViewsettingComponent,
     DialogSectionInfoComponent,
+    ViewConfigComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,9 +72,9 @@ import {ChartService} from "./services/chart.service";
     MdCheckboxModule,
     MdCardModule,
     MdSelectModule,
-    MdProgressBarModule,
     MdProgressSpinnerModule,
     MdDialogModule,
+    MdMenuModule,
     ColorPickerModule,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
   ],

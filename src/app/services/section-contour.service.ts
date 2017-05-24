@@ -39,12 +39,21 @@ export class SectionContourService {
     this._sectionContours = sectionContours;
   }
 
-  getSectionContours(section) {
+  initSectionContours(section) {
     this._nestedSectionContours.forEach(e => {
       this._sectionContours = this._sectionContours.concat(this.flattenNestedOutline(e, section));
     });
     this._sectionContours.sort((a, b) => a.name.localeCompare(b.name));
     return this._sectionContours;
+  }
+
+  getSectionContours() {
+    return this._sectionContours;
+  }
+
+  setSectionContours(contours) {
+    this._sectionContours = contours;
+    this.sectionContoursSource.next(this._sectionContours);
   }
 
   setSectionContoursWithMultisections(element){

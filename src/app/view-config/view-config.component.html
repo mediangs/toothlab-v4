@@ -1,0 +1,37 @@
+<div id="container">
+<ul id="config-list">
+  <li>
+    <button md-raised-button
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('')">
+      Default View
+    </button>
+  </li>
+
+  <li>
+    <button md-raised-button
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.blx')">
+      Thinnest dentin View
+    </button>
+  </li>
+
+  <li>
+    <button md-raised-button
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('mesials_cmp_line.blx')">
+      Mesial dentin View
+    </button>
+  </li>
+
+  <li>
+    <button md-raised-button
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('distals_cmp_line.blx')">
+      Distal dentin View
+    </button>
+  </li>
+  <li>
+    <button md-raised-button
+            (click)="viewConfigDialog()">
+      Configure display mode
+    </button>
+  </li>
+</ul>
+</div>

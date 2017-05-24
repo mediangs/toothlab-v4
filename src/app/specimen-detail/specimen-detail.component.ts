@@ -42,11 +42,6 @@ export class SpecimenDetailComponent implements OnInit {
 
   private sectionContours;
 
-  setSelectedSection(sectionLevel: number) {
-    this.selectedSection = sectionLevel;
-    this.dataService.setActiveSection(this.selectedSection);
-  }
-
   sectionInfoDialog() {
     const dialogRef = this.dialog.open(DialogSectionInfoComponent, {
       height: '500px',
@@ -57,55 +52,22 @@ export class SpecimenDetailComponent implements OnInit {
     });
   }
 
-  viewConfigDialog() {
-    const dialogRef = this.dialog.open(DialogViewsettingComponent, {
-      height: '600px',
-      width: '600px',
-      data: this.sectionContours
-    });
-    dialogRef
-      .afterClosed()
-      .finally(() => {
-        this.setSelectedSection(this.selectedSection);
-      })
-      .subscribe(result => {
-        if (result) {
-          this.sectionContours = result;
-        }
-      });
-  }
-
   constructor(private specimenService: SpecimenService,
               private dataService: DataService,
-              private chartService: ChartService,
               private sectionContourService: SectionContourService,
               public dialog: MdDialog,
               private route: ActivatedRoute,
               private router: Router,
               private renderer: Renderer) {
 
-
     dataService.activeSection$.subscribe( section => {
       this.selectedSection = section;
-      if (!this.sectionContours) {
-        this.sectionContours = this.sectionContourService.getSectionContours(this.sectionData.sections[0]);
-      }
       this.setSectionContourLine(section);
     });
 
     sectionContourService.sectionContours$.subscribe(sectionContours => {
       this.sectionContours = sectionContours;
-      sectionContours
-        .filter(e=> e.visible && e.multiSections)
-        .forEach(e => {
-          chartDefinitions.forEach(cd =>{
-            if (e.key.includes(cd.data['ref']) ||e.key.includes(cd.data['cmps'])) {
-              this.chartService.setActiveChart(cd.id);
-            }
-          });
-        });
       this.setSectionContourLine(this.selectedSection);
-
     });
   }
 
@@ -115,7 +77,9 @@ export class SpecimenDetailComponent implements OnInit {
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
         this.isSectionDataLoaded = true;
-        this.setSelectedSection(nearest(this.sectionData.sections.map(s => s.section), this.sliderAttr['max'] / 2));
+        // Should call once
+        this.sectionContours = this.sectionContourService.initSectionContours(this.sectionData.sections[0]);
+        this.dataService.setActiveSection(nearest(this.sectionData.sections.map(s => s.section), this.sliderAttr['max'] / 2));
         console.log('SpecimenDetail data loaded.');
       })
       .subscribe(data => {

@@ -31,6 +31,8 @@
       </li>
     </ul>
 
+    <app-view-config *ngIf="isSectionDataLoaded"></app-view-config>
+
     <ul *ngIf="!zoomed" id="x3d-list">
       <li *ngFor="let x3d of specimen.x3dModels">
         <!-- i class="material-icons"
@@ -56,50 +58,14 @@
       <li>
         <button md-raised-button
                 [disabled] = "!isSectionDataLoaded"
-                (click)="viewConfigDialog()">
-          Configure display mode
-        </button>
-      </li>
-
-      <li>
-        <button md-raised-button
-                [disabled] = "!isSectionDataLoaded"
                 (click)="sectionInfoDialog()">
           View Detailed Section Info
         </button>
       </li>
-      <li>
-        <button md-raised-button
-                [disabled] = "!isSectionDataLoaded"
-                (click)="this.sectionContourService.setSectionContoursWithMultisections('')">
-          Default View
-        </button>
-      </li>
 
-      <li>
-        <button md-raised-button
-                [disabled] = "!isSectionDataLoaded"
-                (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.blx')">
-          Thinnest dentin View
-        </button>
-      </li>
-
-      <li>
-        <button md-raised-button
-                [disabled] = "!isSectionDataLoaded"
-                (click)="this.sectionContourService.setSectionContoursWithMultisections('mesials_cmp_line.blx')">
-          Mesial dentin View
-        </button>
-      </li>
-
-      <li>
-        <button md-raised-button
-                [disabled] = "!isSectionDataLoaded"
-                (click)="this.sectionContourService.setSectionContoursWithMultisections('distals_cmp_line.blx')">
-          Distal dentin View
-        </button>
-      </li>
     </ul>
+
+
 
 
     <div id="section-slider">
@@ -111,7 +77,7 @@
                  [min]="sliderAttr['min']"
                  [step]="sliderAttr['step']"
                  [thumb-label]="true"
-                 (input)="setSelectedSection(value.value)"
+                 (input)="dataService.setActiveSection(value.value)"
       ></md-slider>
       {{selectedSection | number:'.1'}}mm
     </div>
