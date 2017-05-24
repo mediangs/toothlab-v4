@@ -5,13 +5,9 @@ import {Specimen, X3dModel} from '../schemas/specimen-schema';
 import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
 import {duplicateArray, gradientColorWithRange, lineLength, nearest, repeatedColor} from '../shared/utils';
 import {DataService} from "../services/data.service";
-import {nestedSectionContours, sectionContours} from "../shared/section-contours";
 import {MdDialog} from "@angular/material";
-import {DialogViewsettingComponent} from "../dialog-viewsetting/dialog-viewsetting.component";
 import {DialogSectionInfoComponent} from "../dialog-section-info/dialog-section-info.component";
 import {SectionContourService} from "../services/section-contour.service";
-import {chartDefinitions} from "../shared/chart-definitions";
-import {ChartService} from "../services/chart.service";
 
 declare const x3dom: any;
 

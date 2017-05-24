@@ -31,8 +31,6 @@
       </li>
     </ul>
 
-    <app-view-config *ngIf="isSectionDataLoaded"></app-view-config>
-
     <ul *ngIf="!zoomed" id="x3d-list">
       <li *ngFor="let x3d of specimen.x3dModels">
         <!-- i class="material-icons"
@@ -62,11 +60,9 @@
           View Detailed Section Info
         </button>
       </li>
-
     </ul>
 
-
-
+    <app-view-config *ngIf="isSectionDataLoaded && !zoomed"></app-view-config>
 
     <div id="section-slider">
       <md-slider #value
