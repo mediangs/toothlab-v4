@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
-  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdMenuModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdMenuModule,
   MdProgressSpinnerModule,
   MdSelectModule, MdSliderModule,
   MdToolbarModule
@@ -75,6 +75,7 @@ import { ViewConfigComponent } from './view-config/view-config.component';
     MdProgressSpinnerModule,
     MdDialogModule,
     MdMenuModule,
+    MdIconModule,
     ColorPickerModule,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
   ],

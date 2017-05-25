@@ -14,6 +14,8 @@ import {DataService} from "../services/data.service";
 export class ViewConfigComponent implements OnInit {
   private selectedSection;
   private sectionContours;
+  private cmps_element = ['blx', 'ptu', 'rcp'];
+
 
   viewConfigDialog() {
     const dialogRef = this.dialog.open(DialogViewsettingComponent, {
@@ -57,6 +59,39 @@ export class ViewConfigComponent implements OnInit {
   }
 
   ngOnInit() {
+
+  }
+
+  initMenu() {
+    const menu = [
+      {name: 'Thinnest dentin', ref: 'mindist_ref_line', cmps: 'mindist_cmps_line'},
+      {name: 'Mesial dentin', ref: 'mesial_ref_line', cmps: 'mesial_cmps_line'},
+      {name: 'Distal dentin', ref: 'distal_ref_line', cmps: 'distal_cmps_line'},
+    ];
+
+    const menu_expanded_sample = [
+      {name: 'Thinnest dentin', menuItems: [
+        {key: 'mindist_ref_line', name: 'pre'},
+        {key: 'mindist_cmps_line.blx', name: 'blx'},
+        {key: 'mindist_cmps_line.ptu', name: 'ptu'},
+        {key: 'mindist_cmps_line.rcp', name: 'rcp'}
+      ]},
+    ];
+
+    const menu_expanded = [];
+
+    menu.forEach(e => {
+      const menuItems = [];
+      menuItems.push({key: e.ref, name: 'pre'});
+      this.cmps_element.forEach(cmp => {
+        menuItems.push({key: e.cmps + '.cmp', name: cmp});
+      });
+      menu_expanded.push({name: e.name, menuItems: menuItems});
+    });
+
+    console.log(menu_expanded);
+
+
   }
 
 }

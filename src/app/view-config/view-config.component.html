@@ -1,30 +1,40 @@
-<div id="container">
 <ul id="config-list">
-  <li>
-    <button md-raised-button
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('')">
-      Default View
-    </button>
-  </li>
 
-  <li>
-    <button md-raised-button
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.blx')">
-      Thinnest dentin View
-    </button>
-  </li>
+  <md-menu #appMenu="mdMenu">
+    <button md-menu-item
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindist_ref_line')"> pre </button>
+    <button md-menu-item
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.blx')"> blx </button>
+    <button md-menu-item
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.ptu')"> ptu </button>
+    <button md-menu-item
+            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.rcp')"> rcp </button>
+  </md-menu>
+
+
+  <button md-raised-button
+          (click)="this.sectionContourService.setSectionContoursWithMultisections('')">
+    Default View
+  </button>
+  <br>
+
+  <button md-icon-button [mdMenuTriggerFor]="appMenu">
+    <md-icon>more_vert</md-icon>
+    <span>Thinnest dentin</span>
+  </button>
+
 
   <li>
     <button md-raised-button
             (click)="this.sectionContourService.setSectionContoursWithMultisections('mesials_cmp_line.blx')">
-      Mesial dentin View
+      Mesial dentin
     </button>
   </li>
 
   <li>
     <button md-raised-button
             (click)="this.sectionContourService.setSectionContoursWithMultisections('distals_cmp_line.blx')">
-      Distal dentin View
+      Distal dentin
     </button>
   </li>
   <li>
@@ -34,4 +44,3 @@
     </button>
   </li>
 </ul>
-</div>
