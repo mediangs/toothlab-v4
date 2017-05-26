@@ -59,14 +59,15 @@ export class ViewConfigComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initMenu();
 
   }
 
   initMenu() {
     const menu = [
-      {name: 'Thinnest dentin', ref: 'mindist_ref_line', cmps: 'mindist_cmps_line'},
-      {name: 'Mesial dentin', ref: 'mesial_ref_line', cmps: 'mesial_cmps_line'},
-      {name: 'Distal dentin', ref: 'distal_ref_line', cmps: 'distal_cmps_line'},
+      {name: 'Thinnest dentin', ref: 'mindist_ref_line', cmps: 'mindists_cmp_line'},
+      {name: 'Mesial dentin', ref: 'mesial_ref_line', cmps: 'mesials_cmp_line'},
+      {name: 'Distal dentin', ref: 'distal_ref_line', cmps: 'distals_cmp_line'},
     ];
 
     const menu_expanded_sample = [
@@ -84,14 +85,11 @@ export class ViewConfigComponent implements OnInit {
       const menuItems = [];
       menuItems.push({key: e.ref, name: 'pre'});
       this.cmps_element.forEach(cmp => {
-        menuItems.push({key: e.cmps + '.cmp', name: cmp});
+        menuItems.push({key: e.cmps + '.' + cmp, name: cmp});
       });
-      menu_expanded.push({name: e.name, menuItems: menuItems});
+      menu_expanded.push({name: e.name, triggerName: e.name.replace(' ',''), menuItems: menuItems});
     });
-
     console.log(menu_expanded);
-
-
   }
 
 }
