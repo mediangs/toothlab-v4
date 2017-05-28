@@ -38,6 +38,7 @@ export class ViewConfigComponent implements OnInit {
     dialogRef
       .afterClosed()
       .finally(() => {
+
         // draw outlines
         this.dataService
           .setActiveSection(this.selectedSection ? this.selectedSection : this.dataService.getActiveSection());

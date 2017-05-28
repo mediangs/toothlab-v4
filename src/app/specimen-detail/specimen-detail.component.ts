@@ -42,7 +42,7 @@ export class SpecimenDetailComponent implements OnInit {
   private sectionContours;
 
   sectionInfoDialog() {
-    const dialogRef = this.dialog.open(DialogSectionInfoComponent, {
+    this.dialog.open(DialogSectionInfoComponent, {
       height: '500px',
       width: '350px',
       position: {right: '10px', top: '10px'},
@@ -52,7 +52,7 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   helpDialog() {
-    const dialogRef = this.dialog.open(DialogHelpComponent, {
+    this.dialog.open(DialogHelpComponent, {
       height: '400px',
       width: '500px',
     });
@@ -83,7 +83,10 @@ export class SpecimenDetailComponent implements OnInit {
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
         this.isSectionDataLoaded = true;
+
+        // cmpKeys for viewConfigComponent
         this.cmpKeys = Object.keys(this.sectionData.sections[0].mindists_cmp).map(k => k);
+
         // Should be called once
         this.sectionContours = this.sectionContourService.initSectionContours(this.sectionData.sections[0]);
         this.dataService.setActiveSection(nearest(this.sectionData.sections.map(s => s.section), this.sliderAttr['max'] / 2));

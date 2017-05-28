@@ -23,8 +23,8 @@
 #tab-group{
   position: absolute;
   float: right;
-  top:5px;
-  right: 10px;
+  top:2px;
+  right: 3px;
   font-size: 12px;
 }
 
@@ -35,7 +35,7 @@
 #section-slider{
   position: absolute;
   float: left;
-  top: 50px;
+  top: 70px;
   left: 0px;
 
 }
@@ -47,8 +47,8 @@
 #tools {
   top:0;
   left:0;
-  margin:2px;
-  padding:2px;
+  margin:0px;
+  padding:0px;
   position:absolute;
   display:inline;
   z-index:100;
@@ -62,8 +62,12 @@
   margin:0 -2px 0 0;
   float:left;
 }
+#tools li span{
+  padding-right: 1.4em;
+}
 
 #tools li button{
+  font-size: smaller;
   padding:1px;
   margin:0;
   display:inline;
