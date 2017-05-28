@@ -17,6 +17,7 @@ export class SpecimenChartComponent implements OnInit {
   private chartData;
   private chartOptions;
   private chartDefinitions;
+  private selectedChartValue;
 
   constructor(private specimenService: SpecimenService,
               private chartService: ChartService,
@@ -24,6 +25,7 @@ export class SpecimenChartComponent implements OnInit {
     this.chartDefinitions = chartDefinitions;
     chartService.activeChart$.subscribe(id => {
       this.setChartDataAndOptions(id);
+      this.selectedChartValue = chartDefinitions.find(data => data.id === id);
     });
   }
 

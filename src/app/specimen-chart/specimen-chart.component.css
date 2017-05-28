@@ -6,3 +6,8 @@ md-select-value.md-select-placeholder {
 md-select.md-select-placeholder{
   color: red;
 }
+
+.chart-select {
+  width: 300px;
+  font-weight: bold;
+}
