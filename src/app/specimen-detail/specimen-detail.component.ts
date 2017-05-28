@@ -41,6 +41,10 @@ export class SpecimenDetailComponent implements OnInit {
 
   private sectionContours;
 
+  sidenavInfo(v) {
+    console.log(v);
+  }
+
   sectionInfoDialog() {
     this.dialog.open(DialogSectionInfoComponent, {
       height: '500px',

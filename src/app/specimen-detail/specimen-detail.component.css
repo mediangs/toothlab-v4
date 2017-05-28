@@ -15,14 +15,16 @@
 
 .x3d-zoom {
   width: 95%;
-  height: 700px;
+  height: 600px;
   padding: 10px;
   margin: 10px;
 }
 
 #tab-group{
+  /*
   position: absolute;
   float: right;
+  */
   top:2px;
   right: 3px;
   font-size: 12px;
@@ -66,21 +68,3 @@
   padding-right: 1.4em;
 }
 
-#tools li button{
-  font-size: smaller;
-  padding:1px;
-  margin:0;
-  display:inline;
-  margin-top:-1px;
-}
-
-/*
-#tools li button:hover{
-  background-color: burlywood;
-}
-*/
-
-
-#tools li:first-child button {
-  margin-left:-1px;
-}

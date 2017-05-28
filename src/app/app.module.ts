@@ -6,8 +6,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdMenuModule,
   MdProgressSpinnerModule,
-  MdSelectModule, MdSliderModule, MdTabsModule,
-  MdToolbarModule
+  MdSelectModule, MdSidenavModule, MdSliderModule, MdTabsModule,
+  MdToolbarModule, MdTooltipModule
 } from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
@@ -80,6 +80,8 @@ import { ViewConfigComponent } from './view-config/view-config.component';
     MdMenuModule,
     MdIconModule,
     MdTabsModule,
+    MdSidenavModule,
+    MdTooltipModule,
     ColorPickerModule,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
   ],

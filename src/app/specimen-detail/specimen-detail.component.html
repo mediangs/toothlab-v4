@@ -19,119 +19,112 @@
     </md-card-content>
   </md-card>
 
-  <x3d id="x3d-container" showProgress='true' showStat='false' showLog='false'
-       [class.x3d-unzoom]="!zoomed" [class.x3d-zoom]="zoomed">
-    <ul id="tools">
-      <li>
-        <span id="zoom-button" (click)="toggleZoom()">
-          <md-icon *ngIf="!zoomed">zoom_out_map</md-icon>
-          <md-icon *ngIf="zoomed">zoom_out</md-icon>
-        </span>
-      </li>
-      <li>
-        <span [disabled] = "!isSectionDataLoaded"
-                (click)="sectionInfoDialog()">
-          <md-icon>info_outline</md-icon>
-        </span>
-      </li>
 
-      <li>
-        <span
-                (click)="helpDialog()">
-          <md-icon>help_outline</md-icon>
-        </span>
-      </li>
-    </ul>
+  <md-sidenav-container>
+    <md-sidenav #sidenav mode="side" align="end" opened="true" class="mat-sidenav">
+      <md-tab-group *ngIf="!zoomed" dynamicHeight="true" id="tab-group">
+        <md-tab label="3D Models">
+          <ul id="x3d-list">
+            <li *ngFor="let x3d of specimen.x3dModels">
+              <md-checkbox
+                class="items"
+                color="primary"
+                [(ngModel)]="x3d.visible">
+                <i class="material-icons"
+                   style="vertical-align: middle;"
+                   [style.color]="x3d.color">lens</i>
+                {{x3d.description}}
+              </md-checkbox>
+            </li>
+          </ul>
+        </md-tab>
+        <md-tab label="Sections">
+          <app-view-config
+            *ngIf="!zoomed && isSectionDataLoaded && cmpKeys"
+            [cmpKeys]="cmpKeys">
+          </app-view-config>
+        </md-tab>
+      </md-tab-group>
+    </md-sidenav>
 
-    <!-- ul id="tools">
-      <li>
-        <button md-button id="zoom-button" (click)="toggleZoom()">
-          <md-icon *ngIf="!zoomed">zoom_out_map</md-icon>
-          <md-icon *ngIf="zoomed">zoom_out</md-icon>
-        </button>
-      </li>
-      <li>
-        <button md-button
-                [disabled] = "!isSectionDataLoaded"
-                (click)="sectionInfoDialog()">
-          <md-icon>info_outline</md-icon>
-        </button>
-      </li>
-
-      <li>
-        <button md-button
-                (click)="helpDialog()">
-          <md-icon>help_outline</md-icon>
-        </button>
-      </li>
-    </ul -->
-
-
-    <md-tab-group *ngIf="!zoomed" dynamicHeight="true" id="tab-group">
-      <md-tab label="3D Models">
-        <ul id="x3d-list">
-          <li *ngFor="let x3d of specimen.x3dModels">
-            <md-checkbox
-              class="items"
-              color="primary"
-              [(ngModel)]="x3d.visible">
-              <i class="material-icons"
-                 style="vertical-align: middle;"
-                 [style.color]="x3d.color">lens</i>
-              {{x3d.description}}
-            </md-checkbox>
+    <div>
+      <x3d id="x3d-container" showProgress='true' showStat='false' showLog='false'
+           [class.x3d-unzoom]="!zoomed" [class.x3d-zoom]="zoomed">
+        <ul id="tools">
+          <li>
+            <span mdTooltip="Zoom" id="zoom-button" (click)="toggleZoom()">
+              <md-icon *ngIf="!zoomed">zoom_out_map</md-icon>
+              <md-icon *ngIf="zoomed">zoom_out</md-icon>
+            </span>
           </li>
-        </ul>
-      </md-tab>
-      <md-tab label="Sections">
-        <app-view-config
-          *ngIf="!zoomed && isSectionDataLoaded && cmpKeys"
-          [cmpKeys]="cmpKeys">
-        </app-view-config>
-      </md-tab>
-    </md-tab-group>
+          <li>
+            <span mdTooltip="Show current section information" [disabled] = "!isSectionDataLoaded"
+                  (click)="sectionInfoDialog()">
+              <md-icon>info_outline</md-icon>
+            </span>
+          </li>
 
-    <div id="section-slider">
-      <md-slider #value
-                 vertical="true"
-                 [(ngModel)]="selectedSection"
-                 [disabled] = "!isSectionDataLoaded"
-                 [max]="sliderAttr['max']"
-                 [min]="sliderAttr['min']"
-                 [step]="sliderAttr['step']"
-                 [thumb-label]="true"
-                 (input)="dataService.setActiveSection(value.value)"
-      ></md-slider>
-      {{selectedSection | number:'.1'}}mm
+          <li>
+            <span mdTooltip="Help" (click)="helpDialog()">
+              <md-icon>help_outline</md-icon>
+            </span>
+          </li>
+
+          <li *ngIf="!zoomed">
+            <span (click)="sidenav.toggle()" mdTooltip="Model display configuration">
+              <md-icon *ngIf="sidenav.opened">playlist_add_check</md-icon>
+              <md-icon *ngIf="!sidenav.opened">playlist_add</md-icon>
+            </span>
+          </li>
+
+        </ul>
+
+
+        <div id="section-slider">
+          <md-slider #value
+                     vertical="true"
+                     [(ngModel)]="selectedSection"
+                     [disabled] = "!isSectionDataLoaded"
+                     [max]="sliderAttr['max']"
+                     [min]="sliderAttr['min']"
+                     [step]="sliderAttr['step']"
+                     [thumb-label]="true"
+                     (input)="dataService.setActiveSection(value.value)"
+          ></md-slider>
+          {{selectedSection | number:'.1'}}mm
+        </div>
+
+        <scene pickMode="texCoord">
+          <Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
+                     zNear="0.24115" zFar="100.00000" description=""></Viewpoint>
+          <!-- Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
+                     zNear="9.24115" zFar="100.00000" description=""></Viewpoint-->
+
+          <!-- Viewpoint position="24.58412 2.30883 0.28578"
+                     orientation="-0.61420 0.54921 -0.56668 2.04426"
+                     zNear="0" zFar="100" description=""></Viewpoint -->
+
+          <Transform translation="-4 -6 -8">
+            <Group *ngFor="let x3d of specimen.x3dModels">
+              <Inline *ngIf = "x3d.visible" [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
+                      [attr.url]='specimen.path+x3d.name+".x3d"'></Inline>
+            </Group>
+            <Group *ngFor="let key of coordInfo | keys">
+              <shape>
+                <IndexedLineSet [attr.coordIndex]='coordInfo[key].coordIndex'>
+                  <Coordinate [attr.point]='coordInfo[key].coordPoints'></Coordinate>
+                  <Color [attr.color]='coordInfo[key].coordColor'></Color>
+                </IndexedLineSet>
+              </shape>
+            </Group>
+          </Transform>
+        </scene>
+      </x3d>
     </div>
 
-    <scene pickMode="texCoord">
-      <Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
-                 zNear="0.24115" zFar="100.00000" description=""></Viewpoint>
-      <!-- Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
-                 zNear="9.24115" zFar="100.00000" description=""></Viewpoint-->
-
-      <!-- Viewpoint position="24.58412 2.30883 0.28578"
-                 orientation="-0.61420 0.54921 -0.56668 2.04426"
-                 zNear="0" zFar="100" description=""></Viewpoint -->
-
-      <Transform translation="-4 -6 -8">
-        <Group *ngFor="let x3d of specimen.x3dModels">
-          <Inline *ngIf = "x3d.visible" [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
-                  [attr.url]='specimen.path+x3d.name+".x3d"'></Inline>
-        </Group>
-        <Group *ngFor="let key of coordInfo | keys">
-          <shape>
-            <IndexedLineSet [attr.coordIndex]='coordInfo[key].coordIndex'>
-              <Coordinate [attr.point]='coordInfo[key].coordPoints'></Coordinate>
-              <Color [attr.color]='coordInfo[key].coordColor'></Color>
-            </IndexedLineSet>
-          </shape>
-        </Group>
-      </Transform>
-    </scene>
-  </x3d>
+  </md-sidenav-container>
 </div>
+
 <br>
 <div *ngIf="!zoomed">
   <app-specimen-chart [specimenId]="specimenId"></app-specimen-chart>
