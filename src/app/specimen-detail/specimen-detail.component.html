@@ -1,6 +1,4 @@
 <!--view-source:http://x3dom.org/x3dom/example/x3dom_x3dElementCSSIntegration.html -->
-
-
 <div id="main">
   <md-card *ngIf="!zoomed" id="title">
     <md-card-header>
@@ -13,7 +11,6 @@
       </div>
       <div *ngIf="!isSectionDataLoaded">
         <h3>Loading data...</h3>
-
         <md-progress-spinner
           color="primary"
           mode="indeterminate">
@@ -22,47 +19,51 @@
     </md-card-content>
   </md-card>
 
-  <x3d id="x3d-container" showProgress='false' showStat='false' showLog='false'
-       [ngClass]="{'x3d-zoom': zoomed}">
-
+  <x3d id="x3d-container" showProgress='true' showStat='false' showLog='false'
+       [class.x3d-unzoom]="!zoomed" [class.x3d-zoom]="zoomed">
     <ul id="tools">
       <li>
-        <button id="zoom-button" (click)="toggleZoom()">Zoom</button>
-      </li>
-    </ul>
-
-    <ul *ngIf="!zoomed" id="x3d-list">
-      <li *ngFor="let x3d of specimen.x3dModels">
-        <!-- i class="material-icons"
-           style="vertical-align: middle;"
-           [style.color]="x3d.color"
-           [(colorPicker)]="x3d.color"
-           (change)="updateModelColor(x3d)"
-           [cpOutputFormat]="hex"
-           [cpPosition]="'right'"
-           [cpWidth]="'200px'"
-        >label</i -->
-
-        <md-checkbox
-          class="items"
-          color="primary"
-          [(ngModel)]="x3d.visible">
-          <i class="material-icons"
-             style="vertical-align: middle;"
-             [style.color]="x3d.color">label</i>
-          {{x3d.description}}
-        </md-checkbox>
+        <button md-button id="zoom-button" (click)="toggleZoom()">{{zoomText}}</button>
       </li>
       <li>
-        <button md-raised-button
+        <button md-button
                 [disabled] = "!isSectionDataLoaded"
                 (click)="sectionInfoDialog()">
-          View Detailed Section Info
+          Section Info
+        </button>
+      </li>
+
+      <li>
+        <button md-button
+                (click)="helpDialog()">
+          Help
         </button>
       </li>
     </ul>
 
-    <app-view-config *ngIf="isSectionDataLoaded && !zoomed"></app-view-config>
+    <md-tab-group *ngIf="!zoomed" dynamicHeight="true" id="tab-group">
+      <md-tab label="3D Models">
+        <ul id="x3d-list">
+          <li *ngFor="let x3d of specimen.x3dModels">
+            <md-checkbox
+              class="items"
+              color="primary"
+              [(ngModel)]="x3d.visible">
+              <i class="material-icons"
+                 style="vertical-align: middle;"
+                 [style.color]="x3d.color">label</i>
+              {{x3d.description}}
+            </md-checkbox>
+          </li>
+        </ul>
+      </md-tab>
+      <md-tab label="Sections">
+        <app-view-config
+          *ngIf="!zoomed && isSectionDataLoaded && cmpKeys"
+          [cmpKeys]="cmpKeys">
+        </app-view-config>
+      </md-tab>
+    </md-tab-group>
 
     <div id="section-slider">
       <md-slider #value
@@ -78,7 +79,7 @@
       {{selectedSection | number:'.1'}}mm
     </div>
 
-    <scene pickMode="texCoord">d
+    <scene pickMode="texCoord">
       <Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
                  zNear="0.24115" zFar="100.00000" description=""></Viewpoint>
       <!-- Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
@@ -105,7 +106,7 @@
     </scene>
   </x3d>
 </div>
-
+<br>
 <div *ngIf="!zoomed">
   <app-specimen-chart [specimenId]="specimenId"></app-specimen-chart>
 </div>

@@ -5,7 +5,7 @@
       name="chart"
       color="red"
       placeholder="Select Chart"
-      (change) ="chartService.setActiveChart(value.selected.value.id)">
+      (change) ="chartService.setActiveChart(value.onSelecte.value.id)">
       <md-option *ngFor="let chart of chartDefinitions" [value]="chart"  >
         {{chart.viewValue}}
       </md-option>

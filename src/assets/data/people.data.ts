@@ -4,7 +4,7 @@ export const people: People[] =
 [
 
     {
-        "name" : "Lee Jongki",
+        "name" : "Lee Jongki and his son Lee Kyenugeon",
         "role" : "Dentist, Research design and clinical case",
         "photo" : "jongki.jpg"
     },
@@ -22,18 +22,8 @@ export const people: People[] =
         "photo" : "jeongkyu.jpg"
 
     },
-    {
-        "name" : "Lee koungeon",
-        "role" : "Investor, Prodigy, Professional gamer(Boom beach, Yu-gi-oh card), 1th grade, Samjungja middle school",
-        "photo" : "jeongkyu.jpg"
-    },
-    {
-        "name" : "Moon heangjin",
-        "role" : "Investor, Doctor, radiology specialist",
-        "photo" : "jeongkyu.jpg"
-    }
 
-]
+];
 
 
 

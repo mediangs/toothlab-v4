@@ -1,9 +1,9 @@
 #config-list{
-  list-style-type: none;
-  position: absolute;
-  margin-right: 10px;
-  float: right;
   bottom:2px;
-  right: 2px;
-  font-size: 12px;
+  right: 10px;
+}
+
+button.selected {
+  color: indigo;
+  font-weight: bold;
 }

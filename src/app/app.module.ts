@@ -6,7 +6,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdMenuModule,
   MdProgressSpinnerModule,
-  MdSelectModule, MdSliderModule,
+  MdSelectModule, MdSliderModule, MdTabsModule,
   MdToolbarModule
 } from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -38,8 +38,10 @@ import { SpecimenChartComponent } from './specimen-chart/specimen-chart.componen
 import { SectionInfoboxComponent } from './section-infobox/section-infobox.component';
 import { DialogViewsettingComponent } from './dialog-viewsetting/dialog-viewsetting.component';
 import { DialogSectionInfoComponent } from './dialog-section-info/dialog-section-info.component';
-import {SectionContourService} from "./services/section-contour.service";
-import {ChartService} from "./services/chart.service";
+import { DialogHelpComponent } from './dialog-help/dialog-help.component';
+
+import { SectionContourService } from "./services/section-contour.service";
+import { ChartService } from "./services/chart.service";
 import { ViewConfigComponent } from './view-config/view-config.component';
 
 @NgModule({
@@ -58,6 +60,7 @@ import { ViewConfigComponent } from './view-config/view-config.component';
     SectionInfoboxComponent,
     DialogViewsettingComponent,
     DialogSectionInfoComponent,
+    DialogHelpComponent,
     ViewConfigComponent,
   ],
   imports: [
@@ -76,6 +79,7 @@ import { ViewConfigComponent } from './view-config/view-config.component';
     MdDialogModule,
     MdMenuModule,
     MdIconModule,
+    MdTabsModule,
     ColorPickerModule,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
   ],
@@ -91,7 +95,8 @@ import { ViewConfigComponent } from './view-config/view-config.component';
   ],
   entryComponents: [
     DialogViewsettingComponent,
-    DialogSectionInfoComponent
+    DialogSectionInfoComponent,
+    DialogHelpComponent
   ],
   schemas: [NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent]

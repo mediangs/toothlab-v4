@@ -1,46 +1,64 @@
 <ul id="config-list">
 
-  <md-menu #appMenu="mdMenu">
-    <button md-menu-item
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindist_ref_line')"> pre </button>
-    <button md-menu-item
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.blx')"> blx </button>
-    <button md-menu-item
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.ptu')"> ptu </button>
-    <button md-menu-item
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('mindists_cmp_line.rcp')"> rcp </button>
+  <md-menu #mindist = "mdMenu" [overlapTrigger]="false">
+    <button *ngFor="let item of menu_mindist.menuItems"
+            md-menu-item
+            (click)="this.sectionContourService.setSectionContoursWithMultisections(item.key);
+            onSelecte('mindist', item.name)">
+      {{item.name}}
+    </button>
   </md-menu>
 
-
-  <button md-raised-button
-          (click)="this.sectionContourService.setSectionContoursWithMultisections('')">
-    Default View
+  <button md-icon-button
+          [class.selected]="selectedDirection && selectedDirection =='mindist'"
+          [mdMenuTriggerFor]="mindist">
+    <md-icon>more_vert</md-icon>
+    <span>Thinnest dentin</span><span *ngIf="selectedDirection && selectedDirection =='mindist'"> : {{selectedKey}}</span>
   </button>
   <br>
 
-  <button md-icon-button [mdMenuTriggerFor]="appMenu">
+  <md-menu  #mesial = "mdMenu" [overlapTrigger]="false">
+    <button *ngFor="let item of menu_mesial.menuItems"
+            md-menu-item
+            (click)="this.sectionContourService.setSectionContoursWithMultisections(item.key);
+            onSelecte('mesial', item.name)">
+      {{item.name}}
+    </button>
+  </md-menu>
+
+  <button md-icon-button
+          [class.selected]="selectedDirection && selectedDirection =='mesial'"
+          [mdMenuTriggerFor]="mesial">
     <md-icon>more_vert</md-icon>
-    <span>Thinnest dentin</span>
+    <span>Mesial dentin</span><span *ngIf="selectedDirection && selectedDirection =='mesial'"> : {{selectedKey}}</span>
+  </button>
+  <br>
+
+  <md-menu #distal = "mdMenu" [overlapTrigger]="false">
+    <button *ngFor="let item of menu_distal.menuItems"
+            md-menu-item
+            (click)="this.sectionContourService.setSectionContoursWithMultisections(item.key);
+            onSelecte('distal', item.name)">
+      {{item.name}}
+    </button>
+  </md-menu>
+
+  <button md-icon-button
+          [class.selected]="selectedDirection && selectedDirection =='distal'"
+          [mdMenuTriggerFor]="distal">
+    <md-icon>more_vert</md-icon>
+    <span>Distal dentin</span><span *ngIf="selectedDirection && selectedDirection =='distal'"> : {{selectedKey}}</span>
+  </button>
+  <br>
+
+  <button md-button
+          (click)="this.sectionContourService.setSectionContoursWithMultisections(''); onSelecte('', '')">
+    Reset
   </button>
 
 
-  <li>
-    <button md-raised-button
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('mesials_cmp_line.blx')">
-      Mesial dentin
-    </button>
-  </li>
-
-  <li>
-    <button md-raised-button
-            (click)="this.sectionContourService.setSectionContoursWithMultisections('distals_cmp_line.blx')">
-      Distal dentin
-    </button>
-  </li>
-  <li>
-    <button md-raised-button
-            (click)="viewConfigDialog()">
-      Configure display mode
-    </button>
-  </li>
+  <button md-button
+          (click)="viewConfigDialog()">
+    Fine tune
+  </button>
 </ul>

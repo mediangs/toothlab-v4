@@ -15,7 +15,6 @@ export class SpecimenService {
       return SpecimenList;
   }
 
-
   getSpecimenById(id: string): Specimen {
       return this.getSpecimenList().find( s => s.id === id );
   }
@@ -32,7 +31,6 @@ export class SpecimenService {
     return this.getSectionData(specimen)
       .map(data => {
         data.sections.forEach( d => {
-
           [ 'bdy_major_outline',
             'cnl_ref_major_outline',
             'cnls_cmp_major_outline',
@@ -40,7 +38,6 @@ export class SpecimenService {
             'cnl_opp_ref_major_outline',
             'cnls_opp_cmp_major_outline'
           ].forEach(e => d[e] = null);
-
         });
         return data;
       });
@@ -50,6 +47,7 @@ export class SpecimenService {
     return this.http.get(specimen.path + specimen.sections)
       .map(res => res.json())
       .map(data => {
+
         const DentinThickness = namedlist(['p_body', 'p_canal', 'thickness', 'angle']);
         const CanalDimension = namedlist(['p1', 'p2', 'width']);
         const FileMovement = namedlist(['vector', 'angle', 'distance']);

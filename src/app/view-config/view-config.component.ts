@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ChartService} from "../services/chart.service";
 import {DialogViewsettingComponent} from "../dialog-viewsetting/dialog-viewsetting.component";
 import {SectionContourService} from "../services/section-contour.service";
@@ -12,10 +12,21 @@ import {DataService} from "../services/data.service";
   styleUrls: ['./view-config.component.css']
 })
 export class ViewConfigComponent implements OnInit {
+  @Input() cmpKeys: Array<string>; // ['blx', 'ptu', 'rcp']
   private selectedSection;
   private sectionContours;
-  private cmps_element = ['blx', 'ptu', 'rcp'];
+  private menu_all = [];
+  private menu_mindist;
+  private menu_mesial;
+  private menu_distal;
+  private selectedDirection;  //mindist, mesial, diatal
+  private selectedKey; // pre, blx, ptu, rcp, ...
 
+
+  onSelecte(direction, key) {
+    this.selectedDirection = direction;
+    this.selectedKey = key;
+  }
 
   viewConfigDialog() {
     const dialogRef = this.dialog.open(DialogViewsettingComponent, {
@@ -60,36 +71,39 @@ export class ViewConfigComponent implements OnInit {
 
   ngOnInit() {
     this.initMenu();
-
   }
 
   initMenu() {
-    const menu = [
+    const menuTemplate = [
       {name: 'Thinnest dentin', ref: 'mindist_ref_line', cmps: 'mindists_cmp_line'},
       {name: 'Mesial dentin', ref: 'mesial_ref_line', cmps: 'mesials_cmp_line'},
       {name: 'Distal dentin', ref: 'distal_ref_line', cmps: 'distals_cmp_line'},
     ];
 
-    const menu_expanded_sample = [
-      {name: 'Thinnest dentin', menuItems: [
+    /*
+    const menu_all_sample = [
+      {name: 'Thinnest dentin', triggerName: 'Thinnest dentin',
+        menuItems: [
         {key: 'mindist_ref_line', name: 'pre'},
         {key: 'mindist_cmps_line.blx', name: 'blx'},
         {key: 'mindist_cmps_line.ptu', name: 'ptu'},
         {key: 'mindist_cmps_line.rcp', name: 'rcp'}
-      ]},
+        ]},
     ];
+    */
 
-    const menu_expanded = [];
-
-    menu.forEach(e => {
+    menuTemplate.forEach(e => {
       const menuItems = [];
       menuItems.push({key: e.ref, name: 'pre'});
-      this.cmps_element.forEach(cmp => {
+      this.cmpKeys.forEach(cmp => {
         menuItems.push({key: e.cmps + '.' + cmp, name: cmp});
       });
-      menu_expanded.push({name: e.name, triggerName: e.name.replace(' ',''), menuItems: menuItems});
+      this.menu_all.push({name: e.name, triggerName: e.name.replace(' ',''), menuItems: menuItems});
     });
-    console.log(menu_expanded);
+
+    this.menu_mindist = this.menu_all[0];
+    this.menu_mesial =this.menu_all[1];
+    this.menu_distal = this.menu_all[2];
   }
 
 }

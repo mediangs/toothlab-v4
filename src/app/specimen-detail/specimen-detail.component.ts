@@ -1,13 +1,18 @@
+
 import {Component, OnInit, ElementRef, Renderer} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {MdDialog} from "@angular/material";
+
 import {SpecimenService} from '../services/specimen.service';
+import {SectionContourService} from "../services/section-contour.service";
+import {DataService} from "../services/data.service";
+
 import {Specimen, X3dModel} from '../schemas/specimen-schema';
 import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
 import {duplicateArray, gradientColorWithRange, lineLength, nearest, repeatedColor} from '../shared/utils';
-import {DataService} from "../services/data.service";
-import {MdDialog} from "@angular/material";
+
 import {DialogSectionInfoComponent} from "../dialog-section-info/dialog-section-info.component";
-import {SectionContourService} from "../services/section-contour.service";
+import {DialogHelpComponent} from "../dialog-help/dialog-help.component";
 
 declare const x3dom: any;
 
@@ -20,15 +25,13 @@ declare const x3dom: any;
 export class SpecimenDetailComponent implements OnInit {
 
   private zoomed = false;
+  private zoomText = "Zoom";
 
   private specimen: Specimen;
   private specimenId: string;
 
   private isSectionDataLoaded = false;
-
-  color = '#0ff';
-  modelWidth = 100;
-  modelHeight = 100;
+  private cmpKeys: Array<string>;
 
   sectionData: SectionModelSchema; // JSON
   coordInfo = {}; // coordPoints, coordIndex, coordColor
@@ -45,6 +48,13 @@ export class SpecimenDetailComponent implements OnInit {
       position: {right: '10px', top: '10px'},
       data: this.sectionData.sections
         .find(s => s.section === nearest(this.sectionData.sections.map(s => s.section), this.selectedSection))
+    });
+  }
+
+  helpDialog() {
+    const dialogRef = this.dialog.open(DialogHelpComponent, {
+      height: '400px',
+      width: '500px',
     });
   }
 
@@ -73,7 +83,8 @@ export class SpecimenDetailComponent implements OnInit {
     this.specimenService.getSectionData(this.specimen)
       .finally(() => {
         this.isSectionDataLoaded = true;
-        // Should call once
+        this.cmpKeys = Object.keys(this.sectionData.sections[0].mindists_cmp).map(k => k);
+        // Should be called once
         this.sectionContours = this.sectionContourService.initSectionContours(this.sectionData.sections[0]);
         this.dataService.setActiveSection(nearest(this.sectionData.sections.map(s => s.section), this.sliderAttr['max'] / 2));
         console.log('SpecimenDetail data loaded.');
@@ -124,18 +135,10 @@ export class SpecimenDetailComponent implements OnInit {
       'transparency', element.transparency.toString());
   }
 
-  toggleModel(x3d: X3dModel, checked: boolean){
-    this.setTransparency(x3d, checked ? x3d.prevTransparency : 1);
-  }
-
   toggleZoom() {
     const button = document.getElementById('zoom-button');
-    if (this.zoomed) {
-      button.style.backgroundColor = "#202021";
-    } else {
-      button.style.backgroundColor = "#c23621";
-    }
     this.zoomed = !this.zoomed;
+    this.zoomText = this.zoomed ? "Unzoom" : "Zoom";
   }
 
   setSectionContourLine(sectionLevel) {
@@ -143,24 +146,40 @@ export class SpecimenDetailComponent implements OnInit {
     const section = this.sectionData.sections
       .reduce((prev, curr) =>
         Math.abs(curr.section - sectionLevel) < Math.abs(prev.section - sectionLevel) ? curr : prev);
-
     this.coordInfo = {};
+
     this.sectionContours
       .filter(obj => obj.visible)
       .forEach(obj => {
+
         if (!obj.nested && !obj.multiSections) {
           this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key]);
-        } else if (obj.nested && !obj.multiSections) {
+          return;
+        }
+
+        if (obj.nested && !obj.multiSections) {
           const n = obj.key.indexOf('.');
           this.coordInfo[obj.key] = this.getCoordInfo(obj.color, section[obj.key.slice(0,n)][obj.key.slice(n+1)]);
-        } else if (!obj.nested && obj.multiSections ) {
+          return;
+        }
+
+        if (!obj.nested && obj.multiSections ) {
           this.sectionData.sections.map(d => {
             if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
               const key = obj.key + '.' + d.section.toString();
-              this.coordInfo[key] = this.getCoordInfo(obj.color, d[obj.key]);
+              const coord = d[obj.key];
+              if (coord.length === 2) {
+                this.coordInfo[key] = this.getCoordInfo(
+                  gradientColorWithRange('#f00', '#00f', 0.5, 1, lineLength(duplicateArray(coord))), coord);
+              } else {
+                this.coordInfo[key] = this.getCoordInfo(obj.color, d[obj.key]);
+              }
             }
           });
-        } else if (obj.nested && obj.multiSections ) {
+          return;
+        }
+
+        if (obj.nested && obj.multiSections ) {
           const n = obj.key.indexOf('.');
           this.sectionData.sections.map(d => {
             if ( d.section < this.sectionData.model.evaluating_canal_furcation) {
@@ -174,6 +193,7 @@ export class SpecimenDetailComponent implements OnInit {
               }
             }
           });
+          return;
         }
       });
   }
@@ -184,7 +204,6 @@ export class SpecimenDetailComponent implements OnInit {
     const coordColor = repeatedColor(elementColor, coordPoints.length / 3);
     return {coordPoints : coordPoints, coordIndex : coordIndex, coordColor : coordColor};
   }
-
 
   gotoAnatomy() {
     this.router.navigate(['/specimen-list']);
