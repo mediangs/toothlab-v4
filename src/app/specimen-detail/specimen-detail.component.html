@@ -21,7 +21,7 @@
 
 
   <md-sidenav-container>
-    <md-sidenav #sidenav mode="side" align="end" opened="true" class="mat-sidenav">
+    <md-sidenav #sidenav mode="side" align="end" opened="false" class="mat-sidenav">
       <md-tab-group *ngIf="!zoomed" dynamicHeight="true" id="tab-group">
         <md-tab label="3D Models">
           <ul id="x3d-list">
@@ -81,7 +81,7 @@
 
 
         <div id="section-slider">
-          <md-slider #value
+          <md-slider #sliderValue
                      vertical="true"
                      [(ngModel)]="selectedSection"
                      [disabled] = "!isSectionDataLoaded"
@@ -89,7 +89,7 @@
                      [min]="sliderAttr['min']"
                      [step]="sliderAttr['step']"
                      [thumb-label]="true"
-                     (input)="dataService.setActiveSection(value.value)"
+                     (input)="dataService.setActiveSection(sliderValue.value)"
           ></md-slider>
           {{selectedSection | number:'.1'}}mm
         </div>
