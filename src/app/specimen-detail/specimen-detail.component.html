@@ -52,9 +52,9 @@
            [class.x3d-unzoom]="!zoomed" [class.x3d-zoom]="zoomed">
         <ul id="tools">
           <li>
-            <span mdTooltip="Zoom" id="zoom-button" (click)="toggleZoom()">
-              <md-icon *ngIf="!zoomed">zoom_out_map</md-icon>
-              <md-icon *ngIf="zoomed">zoom_out</md-icon>
+            <span id="zoom-button" (click)="toggleZoom()">
+              <md-icon *ngIf="!zoomed" mdTooltip="Zoom">zoom_out_map</md-icon>
+              <md-icon *ngIf="zoomed"  mdTooltip="Unzoom" >zoom_out</md-icon>
             </span>
           </li>
           <li>
@@ -71,9 +71,9 @@
           </li>
 
           <li *ngIf="!zoomed">
-            <span (click)="sidenav.toggle()" mdTooltip="Model display configuration">
-              <md-icon *ngIf="sidenav.opened">playlist_add_check</md-icon>
-              <md-icon *ngIf="!sidenav.opened">playlist_add</md-icon>
+            <span (click)="sidenav.toggle()">
+              <md-icon *ngIf="sidenav.opened" mdTooltip="Hide Model display configuration">last_page</md-icon>
+              <md-icon *ngIf="!sidenav.opened" mdTooltip="Open Model display configuration">more_vert</md-icon>
             </span>
           </li>
 

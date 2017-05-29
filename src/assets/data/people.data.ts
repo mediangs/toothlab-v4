@@ -4,7 +4,7 @@ export const people: People[] =
 [
 
     {
-        "name" : "Lee Jongki and his son Lee Kyenugeon",
+        "name" : "Lee Jongki and his son Kyenugeon",
         "role" : "Dentist, Research design and clinical case",
         "photo" : "jongki.jpg"
     },
@@ -20,6 +20,13 @@ export const people: People[] =
         "name" : "Kim Jeongkyu",
         "role" : "Software design, technical supervisor",
         "photo" : "jeongkyu.jpg"
+
+    },
+
+    {
+      "name" : "Kim Namwoo",
+      "role" : "Denist, Case doner",
+      "photo" : "jeongkyu.jpg"
 
     },
 
