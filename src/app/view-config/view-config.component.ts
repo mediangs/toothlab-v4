@@ -4,7 +4,7 @@ import {DialogViewsettingComponent} from "../dialog-viewsetting/dialog-viewsetti
 import {SectionContourService} from "../services/section-contour.service";
 import {MdDialog} from "@angular/material";
 import {chartDefinitions} from "../shared/chart-definitions";
-import {DataService} from "../services/data.service";
+import {ActiveSectionService} from "../services/active-section.service";
 
 @Component({
   selector: 'app-view-config',
@@ -51,7 +51,7 @@ export class ViewConfigComponent implements OnInit {
   }
 
   constructor( public dialog: MdDialog,
-               private dataService: DataService,
+               private dataService: ActiveSectionService,
                private chartService: ChartService,
                private sectionContourService: SectionContourService, ) {
     dataService.activeSection$.subscribe(section => this.selectedSection);

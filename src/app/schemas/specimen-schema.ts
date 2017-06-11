@@ -6,6 +6,7 @@ export interface Specimen {
   snapshot?: string; // LJKMX01.jpg
   sections?: string; // JSON file name, which contain section info.
   x3dModels?: Array<X3dModel>; // [root.x3d, canal-pre.x3d, canal-ptu.x3d]
+  presets?: Array<any>;
   path: string;
 
 }

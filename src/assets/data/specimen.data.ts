@@ -12,6 +12,17 @@ export const SpecimenList: Specimen[] =
         "Then, the micro-CT image of instrumented models were superimposed for analysis.",
         snapshot: "snapshot.jpg",
         sections: "sections.json",
+        presets : [
+          {
+            id: 1,
+            description: "Thinnest dentin pre with canal model",
+            activeSection: 10,
+            visibleX3dModels: ["canal_pre", "canal_axis"],
+            visibleSectionContours:[]
+
+          },
+
+        ],
         x3dModels: [
             {
                 name: "root",

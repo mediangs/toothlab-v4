@@ -30,7 +30,7 @@ import { SpecimenDetailComponent } from './specimen-detail/specimen-detail.compo
 import { PeopleService } from "./services/people.service";
 import { PublicationsService } from "./services/publications.service";
 import { SpecimenService } from "./services/specimen.service";
-import { DataService } from "./services/data.service";
+import { ActiveSectionService } from "./services/active-section.service";
 
 import { KeysPipe } from './keys.pipe';
 import { Routing } from "./app.routes";
@@ -89,7 +89,7 @@ import { ViewConfigComponent } from './view-config/view-config.component';
     PeopleService,
     PublicationsService,
     SpecimenService,
-    DataService,
+    ActiveSectionService,
     ChartService,
     SectionContourService,
     ColorPickerService

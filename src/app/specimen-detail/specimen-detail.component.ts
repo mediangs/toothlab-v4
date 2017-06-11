@@ -5,7 +5,7 @@ import {MdDialog} from "@angular/material";
 
 import {SpecimenService} from '../services/specimen.service';
 import {SectionContourService} from "../services/section-contour.service";
-import {DataService} from "../services/data.service";
+import {ActiveSectionService} from "../services/active-section.service";
 
 import {Specimen, X3dModel} from '../schemas/specimen-schema';
 import {SectionModelSchema, ViewSectionSchema} from '../schemas/section-schema';
@@ -59,7 +59,7 @@ export class SpecimenDetailComponent implements OnInit {
   }
 
   constructor(private specimenService: SpecimenService,
-              private dataService: DataService,
+              private dataService: ActiveSectionService,
               private sectionContourService: SectionContourService,
               public dialog: MdDialog,
               private route: ActivatedRoute,

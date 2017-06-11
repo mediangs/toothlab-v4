@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Subject} from "rxjs";
 
 @Injectable()
-export class DataService {
+export class ActiveSectionService {
 
   private selectedSection;
   // Observable source

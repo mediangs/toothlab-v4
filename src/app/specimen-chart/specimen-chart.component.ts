@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {chartDefinitions} from "../shared/chart-definitions";
 import {SpecimenService} from "../services/specimen.service";
-import {DataService} from "../services/data.service";
+import {ActiveSectionService} from "../services/active-section.service";
 import {ChartService} from "../services/chart.service";
 
 @Component({
@@ -21,7 +21,7 @@ export class SpecimenChartComponent implements OnInit {
 
   constructor(private specimenService: SpecimenService,
               private chartService: ChartService,
-              private dataService: DataService) {
+              private dataService: ActiveSectionService) {
     this.chartDefinitions = chartDefinitions;
     chartService.activeChart$.subscribe(id => {
       this.setChartDataAndOptions(id);

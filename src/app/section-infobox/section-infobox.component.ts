@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {DataService} from "../services/data.service";
+import {ActiveSectionService} from "../services/active-section.service";
 import {SpecimenService} from "../services/specimen.service";
 import {SectionModelSchema, SectionSchema} from "../schemas/section-schema";
 
@@ -17,7 +17,7 @@ export class SectionInfoboxComponent implements OnInit {
   numberFormat = '1.2-2';
 
   constructor(private specimenService: SpecimenService,
-              private dataService: DataService) {
+              private dataService: ActiveSectionService) {
     dataService.activeSection$.subscribe( section => {
       this.currentSection = +section.toFixed(2);
       this.cso = this.sectionData.sections.find(s => s.section === this.currentSection);
