@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {nestedSectionContours, sectionContours} from "../shared/section-contours";
-import {duplicateArray} from "../shared/utils";
 import {Subject} from "rxjs/Subject";
 
 @Injectable()
@@ -56,6 +55,31 @@ export class SectionContourService {
     this.sectionContoursSource.next(this._sectionContours);
   }
 
+  setSectionContoursWithPreset(presets){
+    /*
+    const elements_example = [
+      {key: 'bdy_major_outline', multiSections:false},
+      {key: 'cnl_ref_major_outline', multiSections:false},
+      {key: 'cnl_opp_ref_major_outline', multiSections:false},
+      {key: 'mindist_ref_line', multiSections:true}
+    ];
+    */
+
+    // console.log(presets);
+
+    this._sectionContours.forEach(e => {
+     // console.log(presets.find(preset => preset.key === e.key));
+     e.visible = presets.find(preset => preset.key === e.key) ? true : false;
+     e.multiSections = presets.find(preset => preset.multiSections && preset.key === e.key ) ? true : false;
+    });
+
+    this.sectionContoursSource.next(this._sectionContours);
+
+    // console.log(this._sectionContours);
+
+
+  }
+
   setSectionContoursWithMultisections(element){
     this._sectionContours.forEach(e => {
       if (e.key === element) {
@@ -68,7 +92,7 @@ export class SectionContourService {
     this.sectionContoursSource.next(this._sectionContours);
   }
 
-  private  flattenNestedOutline(outline, section) {
+  private flattenNestedOutline(outline, section) {
     const flattened = [];
     const cmps = section[outline.key];
     Object.keys(cmps).forEach( k => {

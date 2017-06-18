@@ -51,6 +51,10 @@ export class SpecimenDetailComponent implements OnInit {
     });
   }
 
+  setActiveSection(sectionLevel){
+    this.dataService.setActiveSection(sectionLevel)
+  }
+
   helpDialog() {
     this.dialog.open(DialogHelpComponent, {
       height: '400px',
@@ -91,6 +95,9 @@ export class SpecimenDetailComponent implements OnInit {
         this.sectionContours = this.sectionContourService.initSectionContours(this.sectionData.sections[0]);
         this.dataService.setActiveSection(nearest(this.sectionData.sections.map(s => s.section), this.sliderAttr['max'] / 2));
         console.log('SpecimenDetail data loaded.');
+
+        // Apply default reset
+        this.applyPreset(0);
       })
       .subscribe(data => {
         this.sectionData = data;
@@ -115,6 +122,23 @@ export class SpecimenDetailComponent implements OnInit {
     const el = document.getElementById(x3d.name + '__MA');
     if (el) {
       this.renderer.setElementAttribute(el, 'diffuseColor', x3d.color);
+    }
+  }
+
+  applyPreset(id){
+
+    const preset = this.specimen.presets.find(preset => preset.id === id);
+
+    if(preset) {
+      if(preset.activeSection) this.setActiveSection(preset.activeSection);
+      if(preset.specimen.position) this.specimen.position = preset.specimen.position;
+      if(preset.specimen.orientation) this.specimen.orientation = preset.specimen.orientation;
+
+      this.specimen.x3dModels.forEach(model => {
+        model.visible = preset.specimen.visibleX3dModels.find(m => m === model.name);
+      });
+
+      this.sectionContourService.setSectionContoursWithPreset(preset.visibleSectionContours);
     }
   }
 

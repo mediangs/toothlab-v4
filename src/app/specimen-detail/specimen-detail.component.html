@@ -59,6 +59,24 @@
             </span>
           </li>
           <li>
+            <!-- span id="preset-button" (click)="applyPreset(1)">
+              <md-icon mdTooltip="Preset">tune</md-icon>
+            </span -->
+            <span md-icon-button
+                  [mdMenuTriggerFor]="presetMenu">
+              <md-icon mdTooltip="Preset">tune</md-icon>
+            </span>
+            <br>
+
+            <md-menu #presetMenu = "mdMenu" [overlapTrigger]="false">
+              <button *ngFor="let preset of specimen.presets"
+                      md-menu-item
+                      (click)="applyPreset(preset.id)">
+                {{preset.description}}
+              </button>
+            </md-menu>
+          </li>
+          <li>
             <span mdTooltip="Show current section information" [disabled] = "!isSectionDataLoaded"
                   (click)="sectionInfoDialog()">
               <md-icon>info_outline</md-icon>
@@ -90,20 +108,14 @@
                      [min]="sliderAttr['min']"
                      [step]="sliderAttr['step']"
                      [thumb-label]="true"
-                     (input)="dataService.setActiveSection(sliderValue.value)"
+                     (input)="setActiveSection(sliderValue.value)"
           ></md-slider>
           {{selectedSection | number:'.1'}}mm
         </div>
 
         <scene pickMode="texCoord">
-          <Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
-                     zNear="0.24115" zFar="100.00000" description=""></Viewpoint>
-          <!-- Viewpoint position="-20.96177 -3.05639 1.59837" orientation="-0.50839 -0.58356 0.63325 2.14580"
-                     zNear="9.24115" zFar="100.00000" description=""></Viewpoint-->
-
-          <!-- Viewpoint position="24.58412 2.30883 0.28578"
-                     orientation="-0.61420 0.54921 -0.56668 2.04426"
-                     zNear="0" zFar="100" description=""></Viewpoint -->
+          <Viewpoint [position]="specimen.position" [orientation]="specimen.orientation"
+                     zNear="0.24115" zFar="100.00000" description="camera"></Viewpoint>
 
           <Transform translation="-4 -6 -8">
             <Group *ngFor="let x3d of specimen.x3dModels">

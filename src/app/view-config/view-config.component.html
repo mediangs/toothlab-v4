@@ -3,8 +3,7 @@
   <md-menu #mindist = "mdMenu" [overlapTrigger]="false">
     <button *ngFor="let item of menu_mindist.menuItems"
             md-menu-item
-            (click)="this.sectionContourService.setSectionContoursWithMultisections(item.key);
-            onSelecte('mindist', item.name)">
+            (click)="onSelect('mindist', item.key, item.name)">
       {{item.name}}
     </button>
   </md-menu>
@@ -13,15 +12,14 @@
           [class.selected]="selectedDirection && selectedDirection =='mindist'"
           [mdMenuTriggerFor]="mindist">
     <md-icon>more_vert</md-icon>
-    <span>Thinnest dentin</span><span *ngIf="selectedDirection && selectedDirection =='mindist'"> : {{selectedKey}}</span>
+    <span>Thinnest dentin</span><span *ngIf="selectedDirection && selectedDirection =='mindist'"> : {{selectedName}}</span>
   </button>
   <br>
 
   <md-menu  #mesial = "mdMenu" [overlapTrigger]="false">
     <button *ngFor="let item of menu_mesial.menuItems"
             md-menu-item
-            (click)="this.sectionContourService.setSectionContoursWithMultisections(item.key);
-            onSelecte('mesial', item.name)">
+            (click)="onSelect('mesial', item.key, item.name)">
       {{item.name}}
     </button>
   </md-menu>
@@ -30,15 +28,14 @@
           [class.selected]="selectedDirection && selectedDirection =='mesial'"
           [mdMenuTriggerFor]="mesial">
     <md-icon>more_vert</md-icon>
-    <span>Mesial dentin</span><span *ngIf="selectedDirection && selectedDirection =='mesial'"> : {{selectedKey}}</span>
+    <span>Mesial dentin</span><span *ngIf="selectedDirection && selectedDirection =='mesial'"> : {{selectedName}}</span>
   </button>
   <br>
 
   <md-menu #distal = "mdMenu" [overlapTrigger]="false">
     <button *ngFor="let item of menu_distal.menuItems"
             md-menu-item
-            (click)="this.sectionContourService.setSectionContoursWithMultisections(item.key);
-            onSelecte('distal', item.name)">
+            (click)="onSelect('distal', item.key, item.name)">
       {{item.name}}
     </button>
   </md-menu>
@@ -47,12 +44,12 @@
           [class.selected]="selectedDirection && selectedDirection =='distal'"
           [mdMenuTriggerFor]="distal">
     <md-icon>more_vert</md-icon>
-    <span>Distal dentin</span><span *ngIf="selectedDirection && selectedDirection =='distal'"> : {{selectedKey}}</span>
+    <span>Distal dentin</span><span *ngIf="selectedDirection && selectedDirection =='distal'"> : {{selectedName}}</span>
   </button>
   <br>
 
   <button md-button
-          (click)="this.sectionContourService.setSectionContoursWithMultisections(''); onSelecte('', '')">
+          (click)="this.sectionContourService.setSectionContoursWithMultisections(''); onSelect('', null, '')">
     Reset
   </button>
 

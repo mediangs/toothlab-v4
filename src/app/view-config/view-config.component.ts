@@ -20,12 +20,14 @@ export class ViewConfigComponent implements OnInit {
   private menu_mesial;
   private menu_distal;
   private selectedDirection;  //mindist, mesial, diatal
-  private selectedKey; // pre, blx, ptu, rcp, ...
+  private selectedName; // pre, blx, ptu, rcp, ...
 
 
-  onSelecte(direction, key) {
+  onSelect(direction, key, name) {
+    //key : mindist_ref_line,  mindists_cmp_line.ptu
+    if (key) this.sectionContourService.setSectionContoursWithMultisections(key);
     this.selectedDirection = direction;
-    this.selectedKey = key;
+    this.selectedName = name;
   }
 
   viewConfigDialog() {

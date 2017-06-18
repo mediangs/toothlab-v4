@@ -1,6 +1,9 @@
 import {Specimen} from '../../app/schemas/specimen-schema';
 const basePath = "/assets/models/anatomy/";
 
+const defaultPosition = "-20.96177 -3.05639 1.59837";
+const defaultOrientation = "-0.50839 -0.58356 0.63325 2.14580";
+
 export const SpecimenList: Specimen[] =
 [
     {
@@ -12,14 +15,123 @@ export const SpecimenList: Specimen[] =
         "Then, the micro-CT image of instrumented models were superimposed for analysis.",
         snapshot: "snapshot.jpg",
         sections: "sections.json",
+        position: defaultPosition,
+        orientation: defaultOrientation,
         presets : [
           {
+            id: 0,
+            description: "Default view",
+            snapshot: "preset0.jpg",
+            specimen: {
+              position: defaultPosition,
+              orientation: defaultOrientation,
+              visibleX3dModels: ["root", "canal_pre", "canal_axis"],
+            },
+            visibleSectionContours: [
+              {key: 'bdy_major_outline', multiSections:false},
+              {key: 'cnl_ref_major_outline', multiSections:false},
+              {key: 'cnl_opp_ref_major_outline', multiSections:false},
+              {key: 'cnls_cmp_major_outline.blx', multiSections:false},
+              {key: 'cnls_cmp_major_outline.ptu', multiSections:false},
+              {key: 'cnls_cmp_major_outline.rcp', multiSections:false},
+              {key: 'mindist_ref_line', multiSections:false}
+            ]
+          },
+          {
             id: 1,
-            description: "Thinnest dentin pre with canal model",
+            description: "Section view",
+            snapshot: "preset1.jpg",
             activeSection: 10,
-            visibleX3dModels: ["canal_pre", "canal_axis"],
-            visibleSectionContours:[]
+            specimen: {
+              position: "0.33352 1.80544 -8.50497",
+              orientation: "0.66910 0.73424 0.11487 3.15240",
+              visibleX3dModels: [],
+            },
+            visibleSectionContours: [
+              {key: 'bdy_major_outline', multiSections:false},
+              {key: 'cnl_ref_major_outline', multiSections:false},
+              {key: 'cnl_opp_ref_major_outline', multiSections:false},
+              {key: 'cnls_cmp_major_outline.blx', multiSections:false},
+              {key: 'cnls_cmp_major_outline.ptu', multiSections:false},
+              {key: 'cnls_cmp_major_outline.rcp', multiSections:false},
+              {key: 'mindist_ref_line', multiSections:false},
+              {key: 'mindists_cmp_line.blx', multiSections:false},
+              {key: 'mindists_cmp_line.ptu', multiSections:false},
+              {key: 'mindists_cmp_line.rcp', multiSections:false},
+            ]
+          },
 
+          {
+            id: 2,
+            description: "Thinnest dentin(pre)",
+            snapshot: "preset1.jpg",
+            activeSection: 10,
+            specimen: {
+              position: "-7.76132 19.56505 2.87449",
+              orientation: "-0.96051 -0.19172 0.20163 1.47196",
+              visibleX3dModels: ["canal_pre", "canal_axis"],
+            },
+            visibleSectionContours: [
+              {key: 'bdy_major_outline', multiSections:false},
+              {key: 'cnl_ref_major_outline', multiSections:false},
+              {key: 'cnl_opp_ref_major_outline', multiSections:false},
+              {key: 'mindist_ref_line', multiSections:true}
+            ]
+          },
+          {
+            id: 3,
+            description: "Thinnest dentin(blx)",
+            snapshot: "preset2.jpg",
+            activeSection: 10,
+            specimen: {
+              position: "-7.76132 19.56505 2.87449",
+              orientation: "-0.96051 -0.19172 0.20163 1.47196",
+              visibleX3dModels: ["canal_pre", "canal_axis", "canal_axis_blx"],
+            },
+            visibleSectionContours:[
+              {key: 'bdy_major_outline', multiSections:false},
+              {key: 'cnl_ref_major_outline', multiSections:false},
+              {key: 'cnls_cmp_major_outline.blx', multiSections:false},
+              {key: 'cnl_opp_ref_major_outline', multiSections:false},
+              {key: 'mindists_cmp_line.blx', multiSections:true}
+            ]
+          },
+
+          {
+            id: 4,
+            description: "Thinnest dentin(ptu)",
+            snapshot: "preset3.jpg",
+            activeSection: 10,
+            specimen: {
+              position: "-7.76132 19.56505 2.87449",
+              orientation: "-0.96051 -0.19172 0.20163 1.47196",
+              visibleX3dModels: ["canal_pre", "canal_axis", "canal_axis_ptu"],
+            },
+            visibleSectionContours:[
+              {key: 'bdy_major_outline', multiSections:false},
+              {key: 'cnl_ref_major_outline', multiSections:false},
+              {key: 'cnls_cmp_major_outline.ptu', multiSections:false},
+              {key: 'cnl_opp_ref_major_outline', multiSections:false},
+              {key: 'mindists_cmp_line.ptu', multiSections:true}
+            ]
+          },
+          {
+            id: 5,
+            description: "Thinnest dentin(rcp)",
+            snapshot: "preset3.jpg",
+            activeSection: 10,
+            specimen: {
+              position: "-7.76132 19.56505 2.87449",
+              orientation: "-0.96051 -0.19172 0.20163 1.47196",
+              visibleX3dModels: ["canal_pre", "canal_axis", "canal_axis_rcp"],
+            },
+            visibleSectionContours:[
+              {key: 'bdy_major_outline', multiSections:false},
+              {key: 'cnl_ref_major_outline', multiSections:false},
+              {key: 'cnls_cmp_major_outline.rcp', multiSections:false},
+              {key: 'cnl_opp_ref_major_outline', multiSections:false},
+              {key: 'mindists_cmp_line.rcp', multiSections:true}
+            ]
           },
 
         ],
@@ -80,6 +192,8 @@ export const SpecimenList: Specimen[] =
         location: "Mandibular first molar, mesial root",
         description:"Mandibular first molar with short curved canal",
         snapshot: "snapshot.jpg",
+        position: defaultPosition,
+        orientation: defaultOrientation,
         x3dModels: [
             {
                 name: "root",

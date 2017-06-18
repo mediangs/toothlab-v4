@@ -2,6 +2,8 @@ export interface Specimen {
   id: string;  //LJKMX01
   title: string;
   location: string; //Maxillary molar
+  position: any,
+  orientation: any,
   description?: string; //
   snapshot?: string; // LJKMX01.jpg
   sections?: string; // JSON file name, which contain section info.
