@@ -119,8 +119,10 @@
 
           <Transform translation="-4 -6 -8">
             <Group *ngFor="let x3d of specimen.x3dModels">
-              <Inline *ngIf = "x3d.visible" [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
+
+              <Inline *ngIf = "x3d.visible" [id]='x3d.name' [attr.nameSpaceName]='x3d.name' mapDEFToID="true"
                       [attr.url]='specimen.path+x3d.name+".x3d"'></Inline>
+
             </Group>
             <Group *ngFor="let key of coordInfo | keys">
               <shape>

@@ -1,4 +1,5 @@
 import {Specimen} from '../../app/schemas/specimen-schema';
+import {multiModelColorMap} from "../../app/shared/color-maps";
 const basePath = "/assets/models/anatomy/";
 
 const defaultPosition = "-20.96177 -3.05639 1.59837";
@@ -140,7 +141,7 @@ export const SpecimenList: Specimen[] =
                 name: "root",
                 description: "Root surface",
                 transparency: 0.8,
-                color: "#0000ff", //  "0 0 1"
+                color: "#f7de4f", //  "0 0 1"
                 visible: true
             },
 
@@ -148,7 +149,7 @@ export const SpecimenList: Specimen[] =
                 name: "canal_pre",
                 description: "Root canal",
                 transparency: 0.7,
-                color: "#00ff00", // "0 1 0"
+                color: "#50fcce", // "0 1 0"
                 visible: true
             },
 
@@ -156,7 +157,7 @@ export const SpecimenList: Specimen[] =
                 name: "canal_axis",
                 description: "Canal axis",
                 transparency: 0.5,
-                color: "#ff0000", //"1 0 0"
+                color: multiModelColorMap.pre, //"1 0 0"
                 visible: false
             },
 
@@ -164,21 +165,21 @@ export const SpecimenList: Specimen[] =
                 name: "canal_axis_blx",
                 description: "Canal axis by BLX file",
                 transparency: 0.5,
-                color: "#00ff00",
+                color: multiModelColorMap.blx,
                 visible: false
             },
             {
                 name: "canal_axis_ptu",
                 description: "Canal axis by ProTaper",
                 transparency: 0.5,
-                color: "#0000ff", //"0 0 1"
+                color: multiModelColorMap.ptu, //"0 0 1"
                 visible: false
             },
             {
                 name: "canal_axis_rcp",
                 description: "Canal axis by Reciproc",
                 transparency: 0.5,
-                color: "#ffff00", //"1 1 0"
+                color: multiModelColorMap.rcp, //"1 1 0"
                 visible: false
             }
 

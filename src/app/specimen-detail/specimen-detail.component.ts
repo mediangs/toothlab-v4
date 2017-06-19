@@ -1,5 +1,5 @@
 
-import {Component, OnInit, ElementRef, Renderer} from '@angular/core';
+import {Component, OnInit, ElementRef, Renderer, AfterViewInit, Renderer2} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MdDialog} from "@angular/material";
 
@@ -22,7 +22,7 @@ declare const x3dom: any;
   styleUrls: ['./specimen-detail.component.css']
 })
 
-export class SpecimenDetailComponent implements OnInit {
+export class SpecimenDetailComponent implements OnInit, AfterViewInit {
 
   private zoomed = false;
   private zoomText = "Zoom";
@@ -68,7 +68,8 @@ export class SpecimenDetailComponent implements OnInit {
               public dialog: MdDialog,
               private route: ActivatedRoute,
               private router: Router,
-              private renderer: Renderer) {
+              private el: ElementRef,
+              private renderer: Renderer2) {
 
     dataService.activeSection$.subscribe( section => {
       this.selectedSection = section;
@@ -79,6 +80,15 @@ export class SpecimenDetailComponent implements OnInit {
       this.sectionContours = sectionContours;
       this.setSectionContourLine(this.selectedSection);
     });
+  }
+
+  ngAfterViewInit(){
+    // color-picker사용을 위해 소문자로 바꾸어야함 ?
+    this.specimen.x3dModels.forEach(x3d => {
+      // x3d.color = x3d.color.toLowerCase();
+      this.updateModelColor(x3d);
+    });
+
   }
 
   ngOnInit() {
@@ -108,20 +118,20 @@ export class SpecimenDetailComponent implements OnInit {
         this.sliderAttr['max'] -= this.sliderAttr['step'];
       });
 
+
     x3dom.reload();
-    /*
-    // color-picker사용을 위해 소문자로 바꾸어야함 ?
-    this.specimen.x3dModels.forEach(el => {
-      el.color = el.color.toLowerCase();
-    });
-    */
 
   }
 
   updateModelColor(x3d) {
     const el = document.getElementById(x3d.name + '__MA');
+    // console.log(document.getElementById('canal_pre__MA'));
+
+    if (document.getElementById(x3d.name))
+
+      console.log(document.getElementById(x3d.name).childElementCount);
     if (el) {
-      this.renderer.setElementAttribute(el, 'diffuseColor', x3d.color);
+      this.renderer.setAttribute(el, 'diffuseColor', x3d.color);
     }
   }
 
@@ -144,11 +154,11 @@ export class SpecimenDetailComponent implements OnInit {
 
   restoreModelStatus() {
     this.specimen.x3dModels.forEach(el => {
-      this.renderer.setElementAttribute(
+      this.renderer.setAttribute(
         document.getElementById(el.name + '__MA'),
         'transparency', el.transparency.toString());
 
-      this.renderer.setElementAttribute(
+      this.renderer.setAttribute(
         document.getElementById(el.name + '__MA'),
         'diffuseColor', el.color);
     });
@@ -157,7 +167,7 @@ export class SpecimenDetailComponent implements OnInit {
   setTransparency(element: X3dModel, transparency: number) {
     element.prevTransparency = element.transparency;
     element.transparency = transparency;
-    this.renderer.setElementAttribute(
+    this.renderer.setAttribute(
       document.getElementById(element.name + '__MA'),
       'transparency', element.transparency.toString());
   }
